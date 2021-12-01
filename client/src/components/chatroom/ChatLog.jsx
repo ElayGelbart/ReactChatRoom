@@ -1,26 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Messeage from "./Messeage";
 export default function ChatLog() {
-  return (
-    <div id="ChatLog">
-      <Messeage
-        classOfCreator="myMsg"
-        msgAuthor="Elay Gelbart"
-        msgText="Hello World"
-        msgTime="14:56"
-      />
-      <Messeage
-        classOfCreator="otherMsg"
-        msgAuthor="Someone else"
-        msgText="Whats App"
-        msgTime="22:22"
-      />
-      <Messeage
-        classOfCreator="otherMsg"
-        msgAuthor="Someone else"
-        msgText="Whats App"
-        msgTime="22:22"
-      />
-    </div>
-  );
+  const [MsgComponents, setMsgComponents] = useState(null);
+
+  useEffect(() => {
+    const sse = new EventSource("http://localhost:8080/chat/stream");
+    sse.onmessage = (e) => {
+      const MsgArray = JSON.parse(e.data);
+      console.log(MsgArray, "in msg");
+      const MsgJSX = [];
+      for (let messeage of MsgArray) {
+        const { msgAuthor, msgText, msgTime } = messeage;
+        MsgJSX.push(
+          <Messeage
+            msgAuthor={msgAuthor}
+            msgText={msgText}
+            msgTime={msgTime}
+            classOfCreator="myMsg"
+          />
+        );
+      }
+      setMsgComponents(MsgJSX);
+    };
+  });
+  return <div id="ChatLog">{MsgComponents}</div>;
 }
