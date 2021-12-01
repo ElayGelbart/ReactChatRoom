@@ -1,0 +1,89 @@
+#chatContainer {
+  height: 80vh;
+  width: 80vw;
+  display: grid;
+  background-color: #f7f7f7;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer ChatLog ChatLog ChatLog ChatLog ChatLog"
+    "UsersLoggedContainer SendChatContainer SendChatContainer SendChatContainer SendChatContainer SendChatContainer";
+}
+#UsersLoggedContainer {
+  grid-area: UsersLoggedContainer;
+  border: 1px solid black;
+}
+#SendChatContainer {
+  grid-area: SendChatContainer;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#ChatLog {
+  grid-area: ChatLog;
+  border: 1px solid black;
+}
+
+#inputChatDiv {
+  padding: 9px 12px 11px;
+  margin: 5px 10px;
+  border-radius: 21px;
+  background-color: white;
+  height: 50%;
+  display: inline-block;
+  width: 85%;
+}
+
+#inputSendChat {
+  text-align: left;
+  height: 100%;
+  width: 80%;
+  border: none;
+  display: block;
+}
+
+#inputSendChat:focus {
+  outline: none;
+}
+.myMsg {
+  position: relative;
+  background-color: green;
+  margin: 10px;
+  float: left;
+}
+.myMsg::before {
+  width: 15px;
+  background-color: green;
+  position: absolute;
+  left: -5px;
+  top: 0px;
+  border-bottom-left-radius: 50px;
+  content: "";
+  display: block;
+}
+
+.otherMsg {
+  position: relative;
+  background-color: yellow;
+  margin: 10px;
+  float: right;
+}
+.otherMsg::before {
+  width: 15px;
+  background-color: green;
+  position: absolute;
+  left: -5px;
+  top: 0px;
+  border-bottom-left-radius: 50px;
+  content: "";
+  display: block;
+}
