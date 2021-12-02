@@ -1,29 +1,31 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "./chatroom.css";
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
-
-export const Username = React.createContext();
+export const UsernameContext = React.createContext();
 
 export default function ChatPage(props) {
   const [IsAuth, setIsAuth] = useState(false);
+  const [UserInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     async function CheckAuth() {
       try {
         const JWToken = document.cookie.split("=")[1];
         console.log(JWToken, "cookie");
-        await fetch("/users/auth", {
+        const response = await fetch("/users/auth", {
           method: "POST",
           headers: { authorization: `Bearer ${JWToken}` },
         }).then((res) => {
-          console.log(res, "res");
           if (!res.ok) {
             throw res;
           }
-          setIsAuth(true);
+          return res;
         });
+        const cookieUsernameObj = await response.json();
+        setUserInfo(cookieUsernameObj);
+        setIsAuth(true);
       } catch (err) {
         setIsAuth(false);
       }
@@ -35,9 +37,11 @@ export default function ChatPage(props) {
     return (
       <div>
         <div id="chatContainer">
-          <UsersLoggedContainer />
-          <SendChatContainer />
-          <ChatLog />
+          <UsernameContext.Provider value={UserInfo}>
+            <UsersLoggedContainer />
+            <SendChatContainer />
+            <ChatLog />
+          </UsernameContext.Provider>
         </div>
       </div>
     );

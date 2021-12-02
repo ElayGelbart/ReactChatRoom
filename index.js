@@ -35,7 +35,14 @@ app.post("/chat/new/msg", (req, res, next) => {
 });
 
 app.post("/users/auth", checkAuthJWT, (req, res, next) => {
-  res.send("verified");
+  try {
+    const { authorization } = req.headers;
+    const UserJWT = authorization.split(" ")[1];
+    const cookieUserObj = jwt.verify(UserJWT, JWTSALT);
+    res.send(cookieUserObj);
+  } catch (err) {
+    next({ status: 500, msg: "unknown error" })
+  }
 });
 
 app.post("/users/login", (req, res, next) => {
