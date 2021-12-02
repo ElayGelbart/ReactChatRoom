@@ -1,0 +1,10 @@
+* {
+  text-align: center;
+}
+#loginContainer {
+  width: 50vw;
+  height: 50vh;
+  padding: 5px;
+  margin: 0 auto;
+  background-color: gray;
+}
