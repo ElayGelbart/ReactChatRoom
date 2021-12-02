@@ -40,6 +40,7 @@ app.post("/users/auth", checkAuthJWT, (req, res, next) => {
 
 app.post("/users/login", (req, res, next) => {
   //future more complex login
+  console.log(req.body, "login body");
   const { username } = req.body
   if (!username) {
     next({ status: 401, msg: "Enter Username" })
@@ -64,6 +65,7 @@ app.listen(port, () => {
 });
 
 function checkAuthJWT(req, res, next) {
+  console.log("in Check Auth");
   const { authorization } = req.headers;
   if (!authorization) {
     next({ status: 403, msg: "Need JWT" })
