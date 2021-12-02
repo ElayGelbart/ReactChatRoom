@@ -7,8 +7,8 @@ import Button from "@mui/material/Button";
 export default function LoginPage(props) {
   const LoginUsernameInput = useRef(null);
   const navigate = useNavigate();
+
   async function handleLogin() {
-    console.log("in handle login");
     try {
       const usernameValue = LoginUsernameInput.current.value;
       await fetch("/users/login", {
@@ -21,7 +21,6 @@ export default function LoginPage(props) {
         }
         return res;
       });
-      console.log("near navigate");
       navigate("/chat");
     } catch (err) {
       console.log(err);
