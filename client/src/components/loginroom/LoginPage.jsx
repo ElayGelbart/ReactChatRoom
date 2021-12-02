@@ -1,13 +1,14 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./loginroom.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function LoginPage(props) {
   const LoginUsernameInput = useRef(null);
-
+  const navigate = useNavigate();
   async function handleLogin() {
+    console.log("in handle login");
     try {
       const usernameValue = LoginUsernameInput.current.value;
       await fetch("/users/login", {
@@ -20,6 +21,8 @@ export default function LoginPage(props) {
         }
         return res;
       });
+      console.log("near navigate");
+      navigate("/chat");
     } catch (err) {
       console.log(err);
     }
@@ -35,17 +38,20 @@ export default function LoginPage(props) {
           label="UserName"
           variant="outlined"
           helperText="Some important text"
-        />
-        <Link to="/chat" style={{ textDecoration: "none" }}>
-          <Button
-            variant="contained"
-            onClick={async () => {
+          onKeyDown={async (e) => {
+            if (e.key === "Enter") {
               await handleLogin();
-            }}
-          >
-            Login
-          </Button>
-        </Link>
+            }
+          }}
+        />
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await handleLogin();
+          }}
+        >
+          Login
+        </Button>
       </div>
     </div>
   );
