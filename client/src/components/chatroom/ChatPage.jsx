@@ -12,10 +12,12 @@ export default function ChatPage(props) {
   const [AllMsgs, setAllMsgs] = useState(null);
 
   function setSSE() {
-    const sse = new EventSource("http://localhost:8080/chat/stream");
+    const JWToken = document.cookie.split("=")[1];
+    const sse = new EventSource("http://localhost:8080/chat/stream", {
+      authorizationHeader: `Bearer ${JWToken}`,
+    });
     sse.onmessage = (e) => {
       const dataFromServer = JSON.parse(e.data);
-      console.log(dataFromServer, "sse data");
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);
     };
@@ -25,7 +27,6 @@ export default function ChatPage(props) {
     async function CheckAuth() {
       try {
         const JWToken = document.cookie.split("=")[1];
-        console.log(JWToken, "cookie");
         const response = await fetch("/users/auth", {
           method: "POST",
           headers: { authorization: `Bearer ${JWToken}` },

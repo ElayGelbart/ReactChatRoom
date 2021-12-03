@@ -11,7 +11,7 @@ const MSGS = []
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/chat/stream", (req, res, next) => {
+app.get("/chat/stream", checkAuthJWT, (req, res, next) => {
   res.set({
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
@@ -20,10 +20,10 @@ app.get("/chat/stream", (req, res, next) => {
 
   setInterval(() => {
     res.write(`data: ${JSON.stringify({ users: USERS, msgs: MSGS })}\n\n`);
-  }, 3000)
+  }, 2000)
 });
 
-app.post("/chat/new/msg", (req, res, next) => {
+app.post("/chat/new/msg", checkAuthJWT, (req, res, next) => {
   const { msgAuthor, msgText } = req.body;
   MSGS.push({ msgAuthor, msgText, msgTime: new Date() })
   res.send("sucseesed");
