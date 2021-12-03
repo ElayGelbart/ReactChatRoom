@@ -14,6 +14,8 @@ export default function ChatLog() {
       const MsgJSX = [];
       for (let messeage of MsgArray) {
         const { msgAuthor, msgText, msgTime } = messeage;
+        let msgTimeHour = msgTime.split("T")[1];
+        msgTimeHour = String(msgTimeHour).split(".")[0];
         let classMsg;
         if (username === msgAuthor) {
           classMsg = "myMsg";
@@ -22,7 +24,7 @@ export default function ChatLog() {
           <Messeage
             msgAuthor={msgAuthor}
             msgText={msgText}
-            msgTime={msgTime}
+            msgTime={msgTimeHour}
             classOfCreator={classMsg || "otherMsg"}
           />
         );
