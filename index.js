@@ -6,7 +6,7 @@ const port = process.env.PORT || 8080;
 
 const app = express();
 app.use(cors())
-const USERS = ["wow"]
+const USERS = []
 const MSGS = []
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -19,12 +19,11 @@ app.get("/chat/stream", (req, res, next) => {
   });
 
   setInterval(() => {
-    res.write(`data: ${JSON.stringify(MSGS)}\n\n`);
+    res.write(`data: ${JSON.stringify({ users: USERS, msgs: MSGS })}\n\n`);
   }, 3000)
 });
 
 app.post("/chat/new/msg", (req, res, next) => {
-  console.log(req.body, "body");
   const { msgAuthor, msgText } = req.body;
   MSGS.push({ msgAuthor, msgText, msgTime: new Date() })
   res.send("sucseesed");
@@ -35,6 +34,7 @@ app.post("/users/auth", checkAuthJWT, (req, res, next) => {
     const { authorization } = req.headers;
     const UserJWT = authorization.split(" ")[1];
     const cookieUserObj = jwt.verify(UserJWT, JWTSALT);
+    USERS.push(cookieUserObj)
     res.send(cookieUserObj);
   } catch (err) {
     next({ status: 500, msg: "unknown error" })

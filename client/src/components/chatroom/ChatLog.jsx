@@ -2,35 +2,34 @@ import React, { useEffect, useState, useContext } from "react";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 
-export default function ChatLog() {
+export default function ChatLog(props) {
   const [MsgComponents, setMsgComponents] = useState(null);
   const { username } = useContext(UsernameContext);
 
   useEffect(() => {
-    const sse = new EventSource("http://localhost:8080/chat/stream");
-    sse.onmessage = (e) => {
-      const MsgArray = JSON.parse(e.data);
-      console.log(MsgArray, "in msg");
-      const MsgJSX = [];
-      for (let messeage of MsgArray) {
-        const { msgAuthor, msgText, msgTime } = messeage;
-        let msgTimeHour = msgTime.split("T")[1];
-        msgTimeHour = String(msgTimeHour).split(".")[0];
-        let classMsg;
-        if (username === msgAuthor) {
-          classMsg = "myMsg";
-        }
-        MsgJSX.push(
-          <Messeage
-            msgAuthor={msgAuthor}
-            msgText={msgText}
-            msgTime={msgTimeHour}
-            classOfCreator={classMsg || "otherMsg"}
-          />
-        );
+    const MsgJSX = [];
+    if (!props.allMsgArray) {
+      return;
+    }
+    for (let messeage of props.allMsgArray) {
+      const { msgAuthor, msgText, msgTime } = messeage;
+      let msgTimeHour = msgTime.split("T")[1];
+      msgTimeHour = String(msgTimeHour).split(".")[0];
+      let classMsg;
+      if (username === msgAuthor) {
+        classMsg = "myMsg";
       }
-      setMsgComponents(MsgJSX);
-    };
-  });
+      MsgJSX.push(
+        <Messeage
+          msgAuthor={msgAuthor}
+          msgText={msgText}
+          msgTime={msgTimeHour}
+          classOfCreator={classMsg || "otherMsg"}
+        />
+      );
+    }
+    setMsgComponents(MsgJSX);
+  }, [props]);
+
   return <div id="ChatLog">{MsgComponents}</div>;
 }

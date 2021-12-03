@@ -8,6 +8,18 @@ export const UsernameContext = React.createContext();
 export default function ChatPage(props) {
   const [IsAuth, setIsAuth] = useState(false);
   const [UserInfo, setUserInfo] = useState(null);
+  const [AllUserLoggedIn, setAllUserLoggedIn] = useState(null);
+  const [AllMsgs, setAllMsgs] = useState(null);
+
+  function setSSE() {
+    const sse = new EventSource("http://localhost:8080/chat/stream");
+    sse.onmessage = (e) => {
+      const dataFromServer = JSON.parse(e.data);
+      console.log(dataFromServer, "sse data");
+      setAllUserLoggedIn(dataFromServer.users);
+      setAllMsgs(dataFromServer.msgs);
+    };
+  }
 
   useEffect(() => {
     async function CheckAuth() {
@@ -25,6 +37,7 @@ export default function ChatPage(props) {
         });
         const cookieUsernameObj = await response.json();
         setUserInfo(cookieUsernameObj);
+        setSSE();
         setIsAuth(true);
       } catch (err) {
         setIsAuth(false);
@@ -38,9 +51,9 @@ export default function ChatPage(props) {
       <div>
         <div id="chatContainer">
           <UsernameContext.Provider value={UserInfo}>
-            <UsersLoggedContainer />
+            <UsersLoggedContainer allUsersArray={AllUserLoggedIn} />
             <SendChatContainer />
-            <ChatLog />
+            <ChatLog allMsgArray={AllMsgs} />
           </UsernameContext.Provider>
         </div>
       </div>
