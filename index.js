@@ -7,11 +7,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 app.use(cors())
 const USERS = ["wow"]
-const MSGS = [{
-  msgAuthor: "Elay Gelbart",
-  msgText: "Hello World",
-  msgTime: "Now"
-}]
+const MSGS = []
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -35,11 +31,19 @@ app.post("/chat/new/msg", (req, res, next) => {
 });
 
 app.post("/users/auth", checkAuthJWT, (req, res, next) => {
-  res.send("verified");
+  try {
+    const { authorization } = req.headers;
+    const UserJWT = authorization.split(" ")[1];
+    const cookieUserObj = jwt.verify(UserJWT, JWTSALT);
+    res.send(cookieUserObj);
+  } catch (err) {
+    next({ status: 500, msg: "unknown error" })
+  }
 });
 
 app.post("/users/login", (req, res, next) => {
   //future more complex login
+  console.log(req.body, "login body");
   const { username } = req.body
   if (!username) {
     next({ status: 401, msg: "Enter Username" })
@@ -64,6 +68,7 @@ app.listen(port, () => {
 });
 
 function checkAuthJWT(req, res, next) {
+  console.log("in Check Auth");
   const { authorization } = req.headers;
   if (!authorization) {
     next({ status: 403, msg: "Need JWT" })

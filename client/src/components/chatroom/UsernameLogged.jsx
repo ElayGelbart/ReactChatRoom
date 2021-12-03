@@ -1,5 +1,4 @@
 import React from "react";
-
 export default function UsernameLogged(props) {
   return (
     <div>
