@@ -11,16 +11,19 @@ export default function ChatPage(props) {
   const [AllUserLoggedIn, setAllUserLoggedIn] = useState(null);
   const [AllMsgs, setAllMsgs] = useState(null);
 
-  function setSSE() {
-    const JWToken = document.cookie.split("=")[1];
+  async function setSSE() {
     const sse = new EventSource("http://localhost:8080/chat/stream", {
-      authorizationHeader: `Bearer ${JWToken}`,
+      withCredentials: true,
     });
     sse.onmessage = (e) => {
+      console.log(e.data);
       const dataFromServer = JSON.parse(e.data);
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);
     };
+    // sse.onerror = () => {
+    //   sse.close();
+    // };
   }
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export default function ChatPage(props) {
         });
         const cookieUsernameObj = await response.json();
         setUserInfo(cookieUsernameObj);
-        setSSE();
+        await setSSE();
         setIsAuth(true);
       } catch (err) {
         setIsAuth(false);

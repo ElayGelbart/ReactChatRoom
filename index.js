@@ -1,31 +1,53 @@
 const express = require("express");
-const cors = require("cors")
+const cors = require("cors");
+const { EventEmitter } = require("events");
 const jwt = require("jsonwebtoken");
 const JWTSALT = "shhhh";
 const port = process.env.PORT || 8080;
 
 const app = express();
 app.use(cors())
+const MsgEvent = new EventEmitter();
+MsgEvent.on("sendNewMsg", (UserMsgObj) => {
+  MSGS.push(UserMsgObj);
+})
 const USERS = []
 const MSGS = []
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/chat/stream", checkAuthJWT, (req, res, next) => {
+app.get("/chat/stream", (req, res, next) => {
   res.set({
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache'
+    'Cache-Control': 'no-cache',
+    'Access-Control-Allow-Origin': 'http://localhost:3000', // change this in prod
+    'Access-Control-Allow-Credentials': 'true'
   });
-
-  setInterval(() => {
-    res.write(`data: ${JSON.stringify({ users: USERS, msgs: MSGS })}\n\n`);
-  }, 2000)
+  // Security check
+  const { cookie } = req.headers
+  const UserJWT = cookie.split("=")[1]
+  try {
+    const userObj = jwt.verify(UserJWT, JWTSALT);
+    setInterval(() => {
+      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
+    }, 1000);
+    req.on("close", () => {
+      const filtredUSERS = USERS.filter(user => user.username != userObj.username)
+      USERS.length = 0;
+      for (let user of filtredUSERS) {
+        USERS.push(user)
+      }
+    })
+  } catch (err) {
+    next({ status: 403, msg: "JWT invalid" })
+  }
 });
 
 app.post("/chat/new/msg", checkAuthJWT, (req, res, next) => {
   const { msgAuthor, msgText } = req.body;
-  MSGS.push({ msgAuthor, msgText, msgTime: new Date() })
+  const userMsgObj = { msgAuthor, msgText, msgTime: new Date() }
+  MsgEvent.emit("sendNewMsg", userMsgObj)
   res.send("sucseesed");
 });
 
