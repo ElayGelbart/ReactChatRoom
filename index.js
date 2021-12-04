@@ -1,12 +1,18 @@
 const express = require("express");
-const cors = require("cors")
+const cors = require("cors");
+const { EventEmitter } = require("events");
 const jwt = require("jsonwebtoken");
 const JWTSALT = "shhhh";
 const port = process.env.PORT || 8080;
 
 const app = express();
 app.use(cors())
-const USERS = ["wow"]
+const MsgEvent = new EventEmitter();
+MsgEvent.on("sendNewMsg", (UserMsgObj) => {
+  MSGS.push(UserMsgObj);
+  MsgEvent.emit("sendInfo")
+})
+const USERS = []
 const MSGS = []
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -15,18 +21,38 @@ app.get("/chat/stream", (req, res, next) => {
   res.set({
     'Content-Type': 'text/event-stream',
     'Connection': 'keep-alive',
-    'Cache-Control': 'no-cache'
+    'Cache-Control': 'no-cache',
+    'Access-Control-Allow-Origin': 'http://localhost:3000', // change this in prod
+    'Access-Control-Allow-Credentials': 'true'
   });
-
-  setInterval(() => {
-    res.write(`data: ${JSON.stringify(MSGS)}\n\n`);
-  }, 3000)
+  // Security check
+  const { cookie } = req.headers
+  const UserJWT = cookie.split("=")[1]
+  try {
+    const userObj = jwt.verify(UserJWT, JWTSALT);
+    res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
+    MsgEvent.on("sendInfo", () => {
+      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
+    })
+    req.on("close", () => {
+      console.log("closed");
+      const filtredUSERS = USERS.filter(user => user.username != userObj.username)
+      USERS.length = 0;
+      for (let user of filtredUSERS) {
+        USERS.push(user)
+      }
+      MsgEvent.emit("sendInfo")
+    })
+  } catch (err) {
+    next({ status: 403, msg: "JWT invalid" })
+  }
 });
 
-app.post("/chat/new/msg", (req, res, next) => {
-  console.log(req.body, "body");
+app.post("/chat/new/msg", checkAuthJWT, (req, res, next) => {
+  console.log("post new msg");
   const { msgAuthor, msgText } = req.body;
-  MSGS.push({ msgAuthor, msgText, msgTime: new Date() })
+  const userMsgObj = { msgAuthor, msgText, msgTime: new Date() }
+  MsgEvent.emit("sendNewMsg", userMsgObj)
   res.send("sucseesed");
 });
 
@@ -35,6 +61,7 @@ app.post("/users/auth", checkAuthJWT, (req, res, next) => {
     const { authorization } = req.headers;
     const UserJWT = authorization.split(" ")[1];
     const cookieUserObj = jwt.verify(UserJWT, JWTSALT);
+    USERS.push(cookieUserObj)
     res.send(cookieUserObj);
   } catch (err) {
     next({ status: 500, msg: "unknown error" })
@@ -43,7 +70,6 @@ app.post("/users/auth", checkAuthJWT, (req, res, next) => {
 
 app.post("/users/login", (req, res, next) => {
   //future more complex login
-  console.log(req.body, "login body");
   const { username } = req.body
   if (!username) {
     next({ status: 401, msg: "Enter Username" })
@@ -68,7 +94,6 @@ app.listen(port, () => {
 });
 
 function checkAuthJWT(req, res, next) {
-  console.log("in Check Auth");
   const { authorization } = req.headers;
   if (!authorization) {
     next({ status: 403, msg: "Need JWT" })

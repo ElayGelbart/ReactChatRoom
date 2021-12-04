@@ -9,9 +9,13 @@ export default function SendChatContainer() {
   async function sendMsgToServer() {
     try {
       const UserMsgInputValue = UserMsgInput.current.value;
+      const JWToken = document.cookie.split("=")[1];
       const response = await fetch("/chat/new/msg", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${JWToken}`,
+        },
         body: JSON.stringify({
           msgText: UserMsgInputValue,
           msgAuthor: username,
