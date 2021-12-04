@@ -10,6 +10,7 @@ app.use(cors())
 const MsgEvent = new EventEmitter();
 MsgEvent.on("sendNewMsg", (UserMsgObj) => {
   MSGS.push(UserMsgObj);
+  MsgEvent.emit("sendInfo")
 })
 const USERS = []
 const MSGS = []
@@ -29,15 +30,18 @@ app.get("/chat/stream", (req, res, next) => {
   const UserJWT = cookie.split("=")[1]
   try {
     const userObj = jwt.verify(UserJWT, JWTSALT);
-    setInterval(() => {
+    res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
+    MsgEvent.on("sendInfo", () => {
       res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
-    }, 1000);
+    })
     req.on("close", () => {
+      console.log("closed");
       const filtredUSERS = USERS.filter(user => user.username != userObj.username)
       USERS.length = 0;
       for (let user of filtredUSERS) {
         USERS.push(user)
       }
+      MsgEvent.emit("sendInfo")
     })
   } catch (err) {
     next({ status: 403, msg: "JWT invalid" })
@@ -45,6 +49,7 @@ app.get("/chat/stream", (req, res, next) => {
 });
 
 app.post("/chat/new/msg", checkAuthJWT, (req, res, next) => {
+  console.log("post new msg");
   const { msgAuthor, msgText } = req.body;
   const userMsgObj = { msgAuthor, msgText, msgTime: new Date() }
   MsgEvent.emit("sendNewMsg", userMsgObj)
@@ -65,7 +70,6 @@ app.post("/users/auth", checkAuthJWT, (req, res, next) => {
 
 app.post("/users/login", (req, res, next) => {
   //future more complex login
-  console.log(req.body, "login body");
   const { username } = req.body
   if (!username) {
     next({ status: 401, msg: "Enter Username" })
@@ -90,7 +94,6 @@ app.listen(port, () => {
 });
 
 function checkAuthJWT(req, res, next) {
-  console.log("in Check Auth");
   const { authorization } = req.headers;
   if (!authorization) {
     next({ status: 403, msg: "Need JWT" })
