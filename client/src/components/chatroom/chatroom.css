@@ -1,6 +1,6 @@
 #chatContainer {
-  height: 80vh;
-  width: 80vw;
+  height: 95vh;
+  width: 90vw;
   display: grid;
   background-color: #f7f7f7;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -31,16 +31,19 @@
 #ChatLog {
   grid-area: ChatLog;
   border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  background-color: #e5ddd5;
 }
 
 #inputChatDiv {
   padding: 9px 12px 11px;
   margin: 5px 10px;
-  border-radius: 21px;
+  border-radius: 45px;
   background-color: white;
   height: 50%;
   display: inline-block;
-  width: 85%;
+  width: 100%;
 }
 
 #inputSendChat {
@@ -54,36 +57,35 @@
 #inputSendChat:focus {
   outline: none;
 }
+
+.Msg {
+  display: block;
+  width: 20%;
+  margin: 10px;
+  border-radius: 7.5px;
+  padding: 10px;
+  background-color: #fff;
+}
 .myMsg {
   position: relative;
-  background-color: green;
-  margin: 10px;
-  float: left;
+  align-self: flex-start;
+  border-top-left-radius: 0;
 }
-.myMsg::before {
-  width: 15px;
-  background-color: green;
-  position: absolute;
-  left: -5px;
-  top: 0px;
-  border-bottom-left-radius: 50px;
-  content: "";
-  display: block;
+.myMsg .Tip {
+  left: -8px;
 }
 
 .otherMsg {
   position: relative;
-  background-color: yellow;
-  margin: 10px;
-  float: right;
+  align-self: flex-end;
+  border-top-right-radius: 0;
 }
-.otherMsg::before {
-  width: 15px;
-  background-color: green;
+.otherMsg .Tip {
+  right: -8px;
+  transform: rotateY(180deg);
+}
+
+.Tip {
   position: absolute;
-  left: -5px;
-  top: 0px;
-  border-bottom-left-radius: 50px;
-  content: "";
-  display: block;
+  top: 0;
 }

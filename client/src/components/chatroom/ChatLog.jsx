@@ -24,7 +24,7 @@ export default function ChatLog(props) {
           msgAuthor={msgAuthor}
           msgText={msgText}
           msgTime={msgTimeHour}
-          classOfCreator={classMsg || "otherMsg"}
+          classOfCreator={`${classMsg || "otherMsg"} Msg`}
         />
       );
     }

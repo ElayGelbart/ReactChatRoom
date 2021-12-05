@@ -10,7 +10,7 @@ app.use(cors())
 const MsgEvent = new EventEmitter();
 MsgEvent.on("sendNewMsg", (UserMsgObj) => {
   MSGS.push(UserMsgObj);
-  MsgEvent.emit("sendInfo")
+  MsgEvent.emit("sendInfo");
 })
 const USERS = []
 const MSGS = []

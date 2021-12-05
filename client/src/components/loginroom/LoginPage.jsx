@@ -29,29 +29,29 @@ export default function LoginPage(props) {
 
   return (
     <div id="loginContainer">
-      <h1>Login Page</h1>
-      <div>
-        <TextField
-          inputRef={LoginUsernameInput}
-          id="loginInput"
-          label="UserName"
-          variant="outlined"
-          helperText="Some important text"
-          onKeyDown={async (e) => {
-            if (e.key === "Enter") {
-              await handleLogin();
-            }
-          }}
-        />
-        <Button
-          variant="contained"
-          onClick={async () => {
+      <h1 style={{ marginBottom: 100 }}>Login Page</h1>
+
+      <TextField
+        inputRef={LoginUsernameInput}
+        id="loginInput"
+        label="UserName"
+        variant="outlined"
+        helperText="Enter Username"
+        autoFocus={true}
+        onKeyDown={async (e) => {
+          if (e.key === "Enter") {
             await handleLogin();
-          }}
-        >
-          Login
-        </Button>
-      </div>
+          }
+        }}
+      />
+      <Button
+        variant="contained"
+        onClick={async () => {
+          await handleLogin();
+        }}
+      >
+        Login
+      </Button>
     </div>
   );
 }
