@@ -19,21 +19,19 @@
 }
 #UsersLoggedContainer {
   grid-area: UsersLoggedContainer;
-  border: 1px solid black;
 }
 #SendChatContainer {
   grid-area: SendChatContainer;
-  border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 #ChatLog {
   grid-area: ChatLog;
-  border: 1px solid black;
   display: flex;
   flex-direction: column;
   background-color: #e5ddd5;
+  overflow-y: scroll;
 }
 
 #inputChatDiv {
@@ -64,28 +62,40 @@
   margin: 10px;
   border-radius: 7.5px;
   padding: 10px;
-  background-color: #fff;
 }
 .myMsg {
   position: relative;
   align-self: flex-start;
   border-top-left-radius: 0;
+  background-color: #dcf8c6;
 }
 .myMsg .Tip {
   left: -8px;
+}
+.myMsg svg {
+  color: #dcf8c6;
 }
 
 .otherMsg {
   position: relative;
   align-self: flex-end;
   border-top-right-radius: 0;
+  background-color: #fff;
 }
 .otherMsg .Tip {
   right: -8px;
   transform: rotateY(180deg);
 }
+.otherMsg svg {
+  color: #fff;
+}
 
 .Tip {
   position: absolute;
   top: 0;
+}
+
+.MsgTime {
+  float: right;
+  color: rgba(0, 0, 0, 0.3);
 }
