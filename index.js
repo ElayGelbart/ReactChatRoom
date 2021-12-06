@@ -10,8 +10,8 @@ app.use(cors())
 const MsgEvent = new EventEmitter();
 MsgEvent.on("sendNewMsg", (UserMsgObj) => {
   MSGS.push(UserMsgObj);
-  MsgEvent.emit("sendInfo")
-})
+  MsgEvent.emit("sendInfo");
+});
 const USERS = []
 const MSGS = []
 app.use(express.json());
@@ -33,7 +33,7 @@ app.get("/chat/stream", (req, res, next) => {
     res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
     MsgEvent.on("sendInfo", () => {
       res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`)
-    })
+    });
     req.on("close", () => {
       console.log("closed");
       const filtredUSERS = USERS.filter(user => user.username != userObj.username)

@@ -14,7 +14,10 @@ export default function ChatLog(props) {
     for (let messeage of props.allMsgArray) {
       const { msgAuthor, msgText, msgTime } = messeage;
       let msgTimeHour = msgTime.split("T")[1];
-      msgTimeHour = String(msgTimeHour).split(".")[0];
+      msgTimeHour = String(String(msgTimeHour).split(".")[0])
+        .split(":")
+        .slice(0, 2)
+        .join(":");
       let classMsg;
       if (username === msgAuthor) {
         classMsg = "myMsg";
@@ -24,7 +27,7 @@ export default function ChatLog(props) {
           msgAuthor={msgAuthor}
           msgText={msgText}
           msgTime={msgTimeHour}
-          classOfCreator={classMsg || "otherMsg"}
+          classOfCreator={`${classMsg || "otherMsg"} Msg`}
         />
       );
     }

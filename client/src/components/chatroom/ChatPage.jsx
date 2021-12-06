@@ -21,9 +21,9 @@ export default function ChatPage(props) {
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);
     };
-    // sse.onerror = () => {
-    //   sse.close();
-    // };
+    sse.onerror = () => {
+      sse.close();
+    };
   }
 
   useEffect(() => {
