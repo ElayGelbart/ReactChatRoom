@@ -24,9 +24,9 @@ export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
   }, [props]);
 
   return (
-    <>
-      <p>User Logged:</p>
+    <div id="LoggedContainer">
+      <p>Users Logged</p>
       {UserLoggedList}
-    </>
+    </div>
   );
 }
