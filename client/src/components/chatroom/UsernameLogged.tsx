@@ -1,5 +1,10 @@
 import React from "react";
-export default function UsernameLogged(props) {
+
+type UsernameLoggedProps = {
+  username: string;
+};
+
+export default function UsernameLogged(props: UsernameLoggedProps) {
   return (
     <div>
       <span>{props.username}</span>

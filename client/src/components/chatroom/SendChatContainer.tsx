@@ -31,7 +31,7 @@ export default function SendChatContainer() {
     }
   }
 
-  const EnterKeySendMsg = (e) => {
+  const EnterKeySendMsg = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       sendMsgToServer();
     }

@@ -1,6 +1,13 @@
 import React from "react";
 
-export default function Messeage(props) {
+type MesseageProps = {
+  msgAuthor: string;
+  msgText: string;
+  msgTime: string;
+  classOfCreator: string;
+};
+
+export default function Messeage(props: MesseageProps) {
   return (
     <div className={props.classOfCreator}>
       <span className="Tip">

@@ -2,7 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import UsernameLogged from "./UsernameLogged";
 import { UsernameContext } from "./ChatPage";
 
-export default function UsersLoggedContainer(props) {
+type UsersLoggedContainerProps = {
+  allUsersArray: { username: string }[];
+};
+
+export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
   const { username } = useContext(UsernameContext);
   const [UserLoggedList, setUserLoggedList] = useState<JSX.Element[]>([
     <UsernameLogged username={username} />,

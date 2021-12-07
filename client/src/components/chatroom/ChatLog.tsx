@@ -2,7 +2,11 @@ import React, { useEffect, useState, useContext } from "react";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 
-export default function ChatLog(props) {
+type ChatLogProps = {
+  allMsgArray: { msgAuthor: string; msgText: string; msgTime: string }[];
+};
+
+export default function ChatLog(props: ChatLogProps) {
   const [MsgComponents, setMsgComponents] = useState<JSX.Element[]>([]);
   const { username } = useContext(UsernameContext);
 
