@@ -4,10 +4,12 @@ import { UsernameContext } from "./ChatPage";
 
 export default function UsersLoggedContainer(props) {
   const { username } = useContext(UsernameContext);
-  const [UserLoggedList, setUserLoggedList] = useState(username);
+  const [UserLoggedList, setUserLoggedList] = useState<JSX.Element[]>([
+    <UsernameLogged username={username} />,
+  ]);
 
   useEffect(() => {
-    const UsersArrayJSX = [];
+    const UsersArrayJSX: JSX.Element[] = [];
     if (!props.allUsersArray) {
       return;
     }

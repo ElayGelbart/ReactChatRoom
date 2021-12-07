@@ -3,7 +3,7 @@ import React from "react";
 export default function Messeage(props) {
   return (
     <div className={props.classOfCreator}>
-      <span class="Tip">
+      <span className="Tip">
         <svg viewBox="0">
           <path
             opacity=".13"

@@ -3,11 +3,11 @@ import "./chatroom.css";
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
-export const UsernameContext = React.createContext();
+export const UsernameContext = React.createContext({ username: "" });
 
 export default function ChatPage(props) {
   const [IsAuth, setIsAuth] = useState(false);
-  const [UserInfo, setUserInfo] = useState(null);
+  const [UserInfo, setUserInfo] = useState({ username: "" });
   const [AllUserLoggedIn, setAllUserLoggedIn] = useState(null);
   const [AllMsgs, setAllMsgs] = useState(null);
 

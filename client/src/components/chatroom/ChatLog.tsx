@@ -3,11 +3,11 @@ import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 
 export default function ChatLog(props) {
-  const [MsgComponents, setMsgComponents] = useState(null);
+  const [MsgComponents, setMsgComponents] = useState<JSX.Element[]>([]);
   const { username } = useContext(UsernameContext);
 
   useEffect(() => {
-    const MsgJSX = [];
+    const MsgJSX: JSX.Element[] = [];
     if (!props.allMsgArray) {
       return;
     }

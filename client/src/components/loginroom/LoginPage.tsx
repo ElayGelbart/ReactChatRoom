@@ -5,11 +5,14 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function LoginPage(props) {
-  const LoginUsernameInput = useRef(null);
+  const LoginUsernameInput = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   async function handleLogin() {
     try {
+      if (LoginUsernameInput.current === null) {
+        throw LoginUsernameInput;
+      }
       const usernameValue = LoginUsernameInput.current.value;
       await fetch("/users/login", {
         method: "POST",
