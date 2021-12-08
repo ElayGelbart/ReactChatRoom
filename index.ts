@@ -51,6 +51,11 @@ app.get("/chat/stream", (req, res, next): void => {
       for (let user of filtredUSERS) {
         USERS.push(user);
       }
+      MsgEvent.emit("sendNewMsg", {
+        msgAuthor: "Server",
+        msgText: `${userObj.username} Disconnected`,
+        msgTime: new Date(),
+      });
       MsgEvent.emit("sendInfo");
     });
   } catch (err) {

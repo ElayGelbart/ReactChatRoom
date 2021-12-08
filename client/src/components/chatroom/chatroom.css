@@ -65,6 +65,14 @@
   border-radius: 7.5px;
   padding: 10px;
 }
+.serverMsg {
+  align-self: center;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(225, 245, 254, 0.92);
+  color: rgba(0, 0, 0, 0.88);
+  border-radius: 7.5px;
+}
 .myMsg {
   position: relative;
   align-self: flex-start;

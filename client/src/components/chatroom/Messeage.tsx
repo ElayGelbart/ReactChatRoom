@@ -8,6 +8,15 @@ type MesseageProps = {
 };
 
 export default function Messeage(props: MesseageProps) {
+  function showAuthor(): JSX.Element | null {
+    if (props.msgAuthor === "Server") {
+      return null;
+    }
+    const randNum = Math.floor(Math.random() * 10) + 1;
+    const colorClass: string = `color${randNum}`;
+
+    return <p className={`MsgAuthor ${colorClass}`}>{props.msgAuthor}</p>;
+  }
   return (
     <div className={props.classOfCreator}>
       <span className="Tip">
@@ -23,8 +32,8 @@ export default function Messeage(props: MesseageProps) {
           ></path>
         </svg>
       </span>
-      <p className="MsgAuthor">{props.msgAuthor}</p>
-      <p className="MsgTesxt">{props.msgText}</p>
+      {showAuthor()}
+      <p className="MsgText">{props.msgText}</p>
       <p className="MsgTime">{props.msgTime}</p>
     </div>
   );
