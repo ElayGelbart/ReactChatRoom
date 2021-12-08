@@ -114,7 +114,7 @@ server.post(
     //future more complex login
     const { username } = req.body;
     if (!username) {
-      next({ status: 401, msg: "Enter Username" });
+      next({ status: 400, msg: "Enter Username" });
       return;
     }
     const JWTcookie: string = jwt.sign({ username: username }, JWTSALT, {
@@ -125,13 +125,20 @@ server.post(
   }
 );
 
-server.use((err: any, _req: any, res: any, _next: any) => {
-  console.log("in error handler");
-  if (err.status) {
-    res.status(err.status).send(err.msg);
-    return;
+server.use(
+  (
+    err: any,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction
+  ) => {
+    console.log("in error handler");
+    if (err.status) {
+      res.status(err.status).send(err.msg);
+      return;
+    }
+    res.send(err).status(500);
   }
-  res.send(err).status(500);
-});
+);
 
 export default server;
