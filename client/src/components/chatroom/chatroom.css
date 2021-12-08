@@ -19,6 +19,8 @@
 }
 #UsersLoggedContainer {
   grid-area: UsersLoggedContainer;
+  text-align: center;
+  background-color: #fff;
 }
 #SendChatContainer {
   grid-area: SendChatContainer;
@@ -99,7 +101,12 @@
   float: right;
   color: rgba(0, 0, 0, 0.3);
 }
-
-#LoggedContainer {
-  text-align: center;
+#MyUserLogged {
+  height: 10%;
+  background-color: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  font-weight: bolder;
 }

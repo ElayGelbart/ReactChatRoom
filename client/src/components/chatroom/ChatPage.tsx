@@ -5,6 +5,7 @@ import "./chatroom.css";
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
+import LoadingSVG from "../LoadingSVG";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 
@@ -68,7 +69,7 @@ export default function ChatPage(): JSX.Element {
   }
   return (
     <div>
-      <p>Not Auth</p>
+      <LoadingSVG />
     </div>
   );
 }

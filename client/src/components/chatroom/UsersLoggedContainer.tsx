@@ -18,14 +18,17 @@ export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
       return;
     }
     for (let user of props.allUsersArray) {
+      if (user.username === username) {
+        continue;
+      }
       UsersArrayJSX.push(<UsernameLogged username={user.username} />);
     }
     setUserLoggedList(UsersArrayJSX);
   }, [props]);
 
   return (
-    <div id="LoggedContainer">
-      <p>Users Logged</p>
+    <div id="UsersLoggedContainer">
+      <div id="MyUserLogged">{username}</div>
       {UserLoggedList}
     </div>
   );
