@@ -28,12 +28,13 @@ describe('Testing Login', () => {
 
 })
 
-describe('Testing auth', () => {
+describe('Testing General auth', () => {
   test('should Pass Auth with JWT', async () => {
     console.log(ServerSentJWT, "jwt jwt jwt jwt ");
     const response = await request(server).post("/users/auth")
       .set("Authorization", `Bearer ${ServerSentJWT}`)
       .expect(200)
+    expect(response.body).toMatchObject({ "username": /\w+/ })
   })
 
   test('should Fail Auth without JWT', async () => {
@@ -46,9 +47,8 @@ describe('Testing auth', () => {
       .set("Authorization", `Bearer InvalidInvalid`)
       .expect(403)
   })
-
-
-
 })
+
+
 
 
