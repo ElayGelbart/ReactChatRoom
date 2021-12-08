@@ -2,12 +2,16 @@ import React, { useEffect, useState, useContext } from "react";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 
-export default function ChatLog(props) {
-  const [MsgComponents, setMsgComponents] = useState(null);
+type ChatLogProps = {
+  allMsgArray: { msgAuthor: string; msgText: string; msgTime: string }[];
+};
+
+export default function ChatLog(props: ChatLogProps) {
+  const [MsgComponents, setMsgComponents] = useState<JSX.Element[]>([]);
   const { username } = useContext(UsernameContext);
 
   useEffect(() => {
-    const MsgJSX = [];
+    const MsgJSX: JSX.Element[] = [];
     if (!props.allMsgArray) {
       return;
     }
@@ -18,9 +22,13 @@ export default function ChatLog(props) {
         .split(":")
         .slice(0, 2)
         .join(":");
-      let classMsg;
+      let classMsg: string = "";
+      console.log(msgAuthor, "author");
+
       if (username === msgAuthor) {
         classMsg = "myMsg";
+      } else if (msgAuthor === "Server") {
+        classMsg = "serverMsg";
       }
       MsgJSX.push(
         <Messeage

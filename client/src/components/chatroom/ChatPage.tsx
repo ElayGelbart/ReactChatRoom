@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
+//Style
 import "./chatroom.css";
+// My Components
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
-export const UsernameContext = React.createContext();
+import LoadingSVG from "../LoadingSVG";
+// Context
+export const UsernameContext = React.createContext({ username: "" });
 
-export default function ChatPage(props) {
+export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
-  const [UserInfo, setUserInfo] = useState(null);
-  const [AllUserLoggedIn, setAllUserLoggedIn] = useState(null);
-  const [AllMsgs, setAllMsgs] = useState(null);
+  const [UserInfo, setUserInfo] = useState({ username: "" });
+  const [AllUserLoggedIn, setAllUserLoggedIn] = useState([]);
+  const [AllMsgs, setAllMsgs] = useState([]);
 
   async function setSSE() {
     const sse = new EventSource("http://localhost:8080/chat/stream", {
@@ -17,7 +21,7 @@ export default function ChatPage(props) {
     });
     sse.onmessage = (e) => {
       console.log(e.data);
-      const dataFromServer = JSON.parse(e.data);
+      const dataFromServer: { users: []; msgs: [] } = JSON.parse(e.data);
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);
     };
@@ -65,7 +69,7 @@ export default function ChatPage(props) {
   }
   return (
     <div>
-      <p>Not Auth</p>
+      <LoadingSVG />
     </div>
   );
 }

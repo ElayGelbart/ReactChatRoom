@@ -2,25 +2,34 @@ import React, { useContext, useEffect, useState } from "react";
 import UsernameLogged from "./UsernameLogged";
 import { UsernameContext } from "./ChatPage";
 
-export default function UsersLoggedContainer(props) {
+type UsersLoggedContainerProps = {
+  allUsersArray: { username: string }[];
+};
+
+export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
   const { username } = useContext(UsernameContext);
-  const [UserLoggedList, setUserLoggedList] = useState(username);
+  const [UserLoggedList, setUserLoggedList] = useState<JSX.Element[]>([
+    <UsernameLogged username={username} />,
+  ]);
 
   useEffect(() => {
-    const UsersArrayJSX = [];
+    const UsersArrayJSX: JSX.Element[] = [];
     if (!props.allUsersArray) {
       return;
     }
     for (let user of props.allUsersArray) {
+      if (user.username === username) {
+        continue;
+      }
       UsersArrayJSX.push(<UsernameLogged username={user.username} />);
     }
     setUserLoggedList(UsersArrayJSX);
   }, [props]);
 
   return (
-    <>
-      <p>User Logged:</p>
+    <div id="UsersLoggedContainer">
+      <div id="MyUserLogged">{username}</div>
       {UserLoggedList}
-    </>
+    </div>
   );
 }

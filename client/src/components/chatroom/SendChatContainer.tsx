@@ -3,11 +3,14 @@ import SendIcon from "@mui/icons-material/Send";
 import { UsernameContext } from "./ChatPage";
 
 export default function SendChatContainer() {
-  const UserMsgInput = useRef(null);
+  const UserMsgInput = useRef<HTMLInputElement>(null);
   const { username } = useContext(UsernameContext);
 
   async function sendMsgToServer() {
     try {
+      if (UserMsgInput.current === null) {
+        throw UserMsgInput;
+      }
       const UserMsgInputValue = UserMsgInput.current.value;
       const JWToken = document.cookie.split("=")[1];
       const response = await fetch("/chat/new/msg", {
@@ -28,7 +31,7 @@ export default function SendChatContainer() {
     }
   }
 
-  const EnterKeySendMsg = (e) => {
+  const EnterKeySendMsg = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       sendMsgToServer();
     }

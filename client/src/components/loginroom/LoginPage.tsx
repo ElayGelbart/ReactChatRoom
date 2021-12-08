@@ -1,16 +1,20 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginroom.css";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-export default function LoginPage(props) {
-  const LoginUsernameInput = useRef(null);
+export default function LoginPage() {
+  const LoginUsernameInput = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  async function handleLogin() {
+  async function handleLogin(): Promise<void> {
     try {
-      const usernameValue = LoginUsernameInput.current.value;
+      //TypeScript Type Validation
+      if (LoginUsernameInput.current === null) {
+        throw LoginUsernameInput;
+      }
+      const usernameValue: string = LoginUsernameInput.current.value;
       await fetch("/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -22,7 +26,7 @@ export default function LoginPage(props) {
         return res;
       });
       navigate("/chat");
-    } catch (err) {
+    } catch (err: unknown) {
       console.log(err);
     }
   }
