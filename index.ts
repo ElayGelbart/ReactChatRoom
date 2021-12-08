@@ -112,3 +112,5 @@ app.use((err: any, _req: any, res: any, _next: any) => {
 app.listen(port, () => {
   console.log(`server listen to port: ${port}`);
 });
+
+export default app;
