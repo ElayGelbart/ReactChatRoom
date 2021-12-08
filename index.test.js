@@ -1,14 +1,23 @@
-// const server = require("./index")
+import server from "./server";
+import request from "supertest"
 
-// describe('Server Tests', () => {
-//   afterAll(async () => {
-//     await server.close()
-//   })
-//   // test('should Post Login Data To Server', async (done) => {
+const UserLoginMockData = { "username": "Aladdin" }
 
-//   // });
-test("test", async () => {
-  expect(2 + 2).toBe(4);
+describe('Testing Login', () => {
+
+  describe('Login with UsernameJson', () => {
+    test('should Response with 200 status Code', async () => {
+      const response = await request(server).post("/users/login").send(UserLoginMockData)
+      expect(response.statusCode).toBe(200)
+      expect(response.headers["set-cookie"][0]).toMatch(/JWT=\w+.\w+.\w+/)
+    })
+
+  })
+
+  // describe('Login without Username', () => {
+
+  // })
+
+
 })
 
-// })
