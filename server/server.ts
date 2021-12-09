@@ -48,7 +48,6 @@ server.get(
         res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
       });
       res.send(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
-      console.log(res, "test cookie");
 
       req.on("close", () => {
         const filtredUSERS = USERS.filter(
@@ -77,10 +76,16 @@ server.post(
   (
     req: express.Request,
     res: express.Response,
-    _next: express.NextFunction
+    next: express.NextFunction
   ): void => {
-    const { msgAuthor, msgText } = req.body;
+    const { msgAuthor, msgText }: { [key: string]: string } = req.body;
+    if (!msgAuthor || !msgText) {
+      next({ status: 400, msg: "Need More Fields" });
+      return;
+    }
     const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
+    console.log(userMsgObj);
+
     MsgEvent.emit("sendNewMsg", userMsgObj);
     res.send("sucseesed");
   }

@@ -20,7 +20,7 @@ export default function Messeage(props: MesseageProps) {
   return (
     <div className={props.classOfCreator}>
       <span className="Tip">
-        <svg viewBox="0">
+        <svg>
           <path
             opacity=".13"
             fill="currentColor"
