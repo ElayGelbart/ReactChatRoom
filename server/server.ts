@@ -87,8 +87,8 @@ server.post(
     const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
     console.log(userMsgObj, "MSGMSG 4TEST");
 
-    MsgEvent.emit("sendNewMsg", userMsgObj);
     res.send("sucseesed");
+    MsgEvent.emit("sendNewMsg", userMsgObj);
   }
 );
 

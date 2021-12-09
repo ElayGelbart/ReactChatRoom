@@ -4,7 +4,7 @@
   "description": "Chat Room",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --verbose ./tests",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ElayGelbart/ReactChatRoom#readme",
   "dependencies": {
+    "async": "^3.2.2",
     "cors": "^2.8.5",
     "eventsource": "^1.1.0",
     "express": "^4.17.1",
