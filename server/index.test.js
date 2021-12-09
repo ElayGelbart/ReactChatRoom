@@ -54,7 +54,17 @@ describe('EventSource', () => {
   })
   it('should get EventSource with Cookie Auth', (done) => {
     request(server).get("/chat/stream") // Basic SSE event
-      .set("Cookie", `JWT=${ServerSentJWT}`).expect(/data/).expect(200, done)
+      .set("Cookie", `JWT=${ServerSentJWT}`)
+      .set("Connection", "keep-alive")
+      .set("Accept", "text/event-stream")
+      .buffer(true).parse((res) => {
+        res.on("data", (res) => {
+          const serverBuffer = Buffer.from(res, "utf-8")
+          const stringBuffer = serverBuffer.toString().replace("data:", "");
+          const resObj = JSON.parse(stringBuffer);
+          expect(resObj.users.length > 0).toBe(true)
+        })
+      }).timeout(1000).catch(() => done())
   })
 
 })
@@ -71,14 +81,21 @@ describe('Post Msgs', () => {
   });
 
   it('should post New Msg with JWT and Msg object', (done) => {
-    request(server).get("/chat/stream")
+    request(server).get("/chat/stream") // Basic SSE event
       .set("Cookie", `JWT=${ServerSentJWT}`)
       .set("Connection", "keep-alive")
-      .timeout({ response: 5000, deadline: 10000 })
-      .then(res => { console.log(res); done() }, err => console.log("err"))
-    request(server).post("/chat/new/msg")
-      .set("Authorization", `Bearer ${ServerSentJWT}`)
-      .send(MsgMockData).end()
+      .set("Accept", "text/event-stream")
+      .buffer(true).parse((res) => {
+        res.on("data", (res) => {
+          const serverBuffer = Buffer.from(res, "utf-8")
+          const stringBuffer = serverBuffer.toString().replace("data:", "");
+          const resObj = JSON.parse(stringBuffer);
+          expect(resObj.users.length > 0).toBe(true)
+        })
+      }).timeout(1000).catch(() => done())
+    // request(server).post("/chat/new/msg")
+    //   .set("Authorization", `Bearer ${ServerSentJWT}`)
+    //   .send(MsgMockData)
   });
 })
 

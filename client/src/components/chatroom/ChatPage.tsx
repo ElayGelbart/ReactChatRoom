@@ -21,10 +21,11 @@ export default function ChatPage(): JSX.Element {
     });
     sse.onmessage = (e) => {
       const dataFromServer: { users: []; msgs: [] } = JSON.parse(e.data);
+      console.log("meegssgeges", dataFromServer);
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);
     };
-    sse.onerror = () => {
+    sse.onerror = (err) => {
       sse.close();
     };
   }

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { EventEmitter } from "events";
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import checkAuthJWT from "./middleware/security/Auth";
 const JWTSALT = "shhhh";
 const server = express();
@@ -40,6 +40,8 @@ server.get(
       }
       const userCookieJWT = cookie.split("=")[1];
       const userObj = jwt.verify(userCookieJWT, JWTSALT);
+      console.log(userObj, "user Obj 4test");
+
       if (typeof userObj === "string") {
         throw userObj;
       }
@@ -47,7 +49,7 @@ server.get(
       MsgEvent.on("sendInfo", () => {
         res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
       });
-      res.send(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
+      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
 
       req.on("close", () => {
         const filtredUSERS = USERS.filter(
@@ -62,7 +64,6 @@ server.get(
           msgText: `${userObj.username} Disconnected`,
           msgTime: new Date(),
         });
-        MsgEvent.emit("sendInfo");
       });
     } catch (err) {
       next({ status: 403, msg: "JWT invalid" });
@@ -84,7 +85,7 @@ server.post(
       return;
     }
     const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
-    console.log(userMsgObj);
+    console.log(userMsgObj, "MSGMSG 4TEST");
 
     MsgEvent.emit("sendNewMsg", userMsgObj);
     res.send("sucseesed");
