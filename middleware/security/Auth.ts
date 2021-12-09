@@ -8,8 +8,6 @@ export default function checkAuthJWT(
   next: express.NextFunction
 ): void {
   const { authorization } = req.headers;
-  console.log(authorization);
-
   if (!authorization) {
     next({ status: 403, msg: "Need JWT" });
     return;

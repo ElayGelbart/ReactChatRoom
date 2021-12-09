@@ -20,7 +20,6 @@ export default function ChatPage(): JSX.Element {
       withCredentials: true,
     });
     sse.onmessage = (e) => {
-      console.log(e.data);
       const dataFromServer: { users: []; msgs: [] } = JSON.parse(e.data);
       setAllUserLoggedIn(dataFromServer.users);
       setAllMsgs(dataFromServer.msgs);

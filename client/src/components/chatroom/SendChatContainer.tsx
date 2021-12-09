@@ -25,7 +25,6 @@ export default function SendChatContainer() {
         }),
       });
       UserMsgInput.current.value = "";
-      console.log(response);
     } catch (err) {
       console.log(err);
     }

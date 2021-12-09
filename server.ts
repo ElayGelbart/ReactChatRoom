@@ -33,6 +33,7 @@ server.get(
     });
     // Security check
     const { cookie } = req.headers;
+
     try {
       if (!cookie) {
         throw cookie;
@@ -42,14 +43,14 @@ server.get(
       if (typeof userObj === "string") {
         throw userObj;
       }
-      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
 
       MsgEvent.on("sendInfo", () => {
         res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
       });
+      res.send(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
+      console.log(res, "test cookie");
 
       req.on("close", () => {
-        console.log("closed");
         const filtredUSERS = USERS.filter(
           (user) => user.username != userObj.username
         );
@@ -78,7 +79,6 @@ server.post(
     res: express.Response,
     _next: express.NextFunction
   ): void => {
-    console.log("post new msg");
     const { msgAuthor, msgText } = req.body;
     const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
     MsgEvent.emit("sendNewMsg", userMsgObj);
@@ -132,7 +132,6 @@ server.use(
     res: express.Response,
     _next: express.NextFunction
   ) => {
-    console.log("in error handler");
     if (err.status) {
       res.status(err.status).send(err.msg);
       return;

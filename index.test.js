@@ -4,14 +4,13 @@ import request from "supertest"
 const UserLoginMockData = { "username": "Aladdin" }
 
 let ServerSentJWT;
-describe('Testing Login', () => {
+describe('Login', () => {
 
   describe('Login with Username in JSON', () => {
     test('should Response with cookie and 200 status Code', async () => {
       const response = await request(server).post("/users/login").send(UserLoginMockData)
         .expect(200)
         .expect("set-cookie", /JWT=\w+.\w+.\w+/)
-      console.log(response.headers["set-cookie"][0], "server jwt");
       ServerSentJWT = response.headers["set-cookie"][0].match(/\w+\.\w+\..+?(?=;)/)[0];
     })
 
@@ -28,27 +27,37 @@ describe('Testing Login', () => {
 
 })
 
-describe('Testing General auth', () => {
+describe('General auth', () => {
   test('should Pass Auth with JWT', async () => {
-    console.log(ServerSentJWT, "jwt jwt jwt jwt ");
     const response = await request(server).post("/users/auth")
       .set("Authorization", `Bearer ${ServerSentJWT}`)
       .expect(200)
     expect(response.body).toMatchObject({ "username": /\w+/ })
   })
 
-  test('should Fail Auth without JWT', async () => {
+  test('should Fail 403 Auth without JWT', async () => {
     const response = await request(server).post("/users/auth")
       .expect(403)
   })
 
-  test('should Fail Auth with invalid JWT', async () => {
+  test('should Fail 403 Auth with invalid JWT', async () => {
     const response = await request(server).post("/users/auth")
       .set("Authorization", `Bearer InvalidInvalid`)
       .expect(403)
   })
 })
 
+describe('EventSource', () => {
+  test('should get 403 without Cookie Auth', async () => {
+    const response = await request(server).get("/chat/stream")
+      .expect(403)
+  })
+  test('should get EventSource with Cookie Auth', (done) => {
+    request(server).get("/chat/stream") // Basic SSE event
+      .set("Cookie", `JWT=${ServerSentJWT}`).expect(/data/).expect(200, done)
+  })
+
+})
 
 
 
