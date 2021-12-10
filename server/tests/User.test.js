@@ -54,20 +54,20 @@ describe('EventSource', () => {
     const response = await request(server).get("/chat/stream")
       .expect(403)
   })
-  it('should get EventSource with Cookie Auth', (done) => {
-    request(server).get("/chat/stream") // Basic SSE event
-      .set("Cookie", `JWT=${ServerSentJWT}`)
-      .set("Connection", "keep-alive")
-      .set("Accept", "text/event-stream")
-      .buffer(true).parse((res) => {
-        res.on("data", (res) => {
-          const serverBuffer = Buffer.from(res, "utf-8")
-          const stringBuffer = serverBuffer.toString().replace("data:", "");
-          const resObj = JSON.parse(stringBuffer);
-          expect(resObj.users.length > 0).toBe(true)
-        })
-      }).timeout(1000).catch(() => { done() })
-  })
+  // it('should get EventSource with Cookie Auth', (done) => {
+  //   request(server).get("/chat/stream") // Basic SSE event
+  //     .set("Cookie", `JWT=${ServerSentJWT}`)
+  //     .set("Connection", "keep-alive")
+  //     .set("Accept", "text/event-stream")
+  //     .buffer(true).parse((res) => {
+  //       res.on("data", (res) => {
+  //         const serverBuffer = Buffer.from(res, "utf-8")
+  //         const stringBuffer = serverBuffer.toString().replace("data:", "");
+  //         const resObj = JSON.parse(stringBuffer);
+  //         expect(resObj.users.length > 0).toBe(true)
+  //       })
+  //     }).timeout(1000).catch(() => { done() })
+  // })
   describe('Post Msgs', () => {
     it('should fail 403 with invalid JWT', (done) => {
       request(server).post("/chat/new/msg").expect(403, done)
@@ -100,9 +100,34 @@ describe('EventSource', () => {
                 expect(resObj.msgs[1].msgText).toBe("Testing")
               })
             })
-            .timeout({ response: 500, deadline: 3000 }).catch(() => cb())
-        }
+            .timeout({ response: 4000, deadline: 4500 }).catch(() => cb())
+        },
       ], done)
+    });
+
+    it('should PromiseAll Send Msg', async () => {
+
+      const response = await Promise.all([
+        request(server).get("/chat/stream") // Basic SSE event
+          .set("Cookie", `JWT=${ServerSentJWT}`)
+          .set("Connection", "keep-alive")
+          .set("Accept", "text/event-stream")
+          .buffer(true).parse((res) => {
+            res.on("data", (res) => {
+              const serverBuffer = Buffer.from(res, "utf-8")
+              const stringBuffer = serverBuffer.toString().replace("data:", "");
+              console.log(stringBuffer)
+              const resObj = JSON.parse(stringBuffer);
+
+            })
+          })
+          .timeout({ response: 1000, deadline: 2000 }),
+        request(server).post("/chat/new/msg")
+          .set("Authorization", `Bearer ${ServerSentJWT}`)
+          .send(MsgMockData)
+      ])
+      console.log(response, "promiseres")
+      expect(response).toBe(200)
     });
   })
 })

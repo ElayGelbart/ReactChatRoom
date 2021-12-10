@@ -45,7 +45,11 @@ server.get(
       if (typeof userObj === "string") {
         throw userObj;
       }
-
+      MsgEvent.emit("sendNewMsg", {
+        msgAuthor: "Server",
+        msgText: `${userObj.username} Connected`,
+        msgTime: new Date(),
+      });
       MsgEvent.on("sendInfo", () => {
         res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
       });
