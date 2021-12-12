@@ -1,15 +1,20 @@
 import express from "express";
 import cors from "cors";
-import { EventEmitter } from "events";
 import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
+import mongodb from "mongodb";
 import checkAuthJWT from "./middleware/security/Auth";
 require("dotenv").config();
 
 const MongoUri = process.env.MONGO_URI || process.argv[2];
-mongoose.connect(MongoUri, () => {
-  console.log("Mongo Connected");
-});
+export const mongoClient = new mongodb.MongoClient(MongoUri);
+mongoClient
+  .connect()
+  .then(() => {
+    console.log("mongodb connected");
+  })
+  .catch((err) => {
+    console.log(`${err} happend`);
+  });
 
 const server = express();
 server.use(cors());
