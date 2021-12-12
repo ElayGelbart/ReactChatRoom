@@ -34,7 +34,7 @@ export default function ChatPage(): JSX.Element {
     async function CheckAuth() {
       try {
         const JWToken = document.cookie.split("=")[1];
-        const response = await fetch("/users/auth", {
+        const response = await fetch("/user/auth", {
           method: "POST",
           headers: { authorization: `Bearer ${JWToken}` },
         }).then((res) => {

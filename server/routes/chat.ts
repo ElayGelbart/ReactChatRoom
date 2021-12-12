@@ -70,21 +70,10 @@ chatRouter.get(
       res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
 
       req.on("close", async () => {
-        const USERS = await mongoClient
+        await mongoClient
           .db("ReactChatRoom")
           .collection("Users")
-          .find<UserSchema>({})
-          .toArray();
-        if (!USERS) {
-          return;
-        }
-        const filtredUSERS = USERS.filter(
-          (user) => user.username != userObj.username
-        );
-        USERS.length = 0;
-        for (let user of filtredUSERS) {
-          USERS.push(user);
-        }
+          .deleteOne({ username: userObj.username });
         MsgEvent.emit("sendNewMsg", {
           msgAuthor: "Server",
           msgText: `${userObj.username} Disconnected`,
