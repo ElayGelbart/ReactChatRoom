@@ -13,7 +13,7 @@ export default function SendChatContainer() {
       }
       const UserMsgInputValue = UserMsgInput.current.value;
       const JWToken = document.cookie.split("=")[1];
-      const response = await fetch("/chat/new/msg", {
+      await fetch("/chat/new/msg", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,6 @@ export default function SendChatContainer() {
         }),
       });
       UserMsgInput.current.value = "";
-      console.log(response);
     } catch (err) {
       console.log(err);
     }

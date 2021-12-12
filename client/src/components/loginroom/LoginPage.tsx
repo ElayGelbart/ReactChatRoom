@@ -15,7 +15,7 @@ export default function LoginPage() {
         throw LoginUsernameInput;
       }
       const usernameValue: string = LoginUsernameInput.current.value;
-      await fetch("/users/login", {
+      await fetch("/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username: usernameValue }),

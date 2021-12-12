@@ -23,8 +23,6 @@ export default function ChatLog(props: ChatLogProps) {
         .slice(0, 2)
         .join(":");
       let classMsg: string = "";
-      console.log(msgAuthor, "author");
-
       if (username === msgAuthor) {
         classMsg = "myMsg";
       } else if (msgAuthor === "Server") {
