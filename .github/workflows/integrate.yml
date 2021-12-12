@@ -10,7 +10,7 @@ env:
 jobs:
   test_server:
     runs-on: ubuntu-latest
-     defaults:
+    defaults:
       run:
         working-directory: server
     steps:
