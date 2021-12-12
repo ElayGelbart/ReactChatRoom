@@ -1,12 +1,21 @@
-import server from "../server.ts";
+import server from "../server.ts"
 import request from "supertest"
 import async from "async"
+import { mongoClient } from "../server"
+import { MongoClient } from "mongodb"
+require("dotenv").config();
 const UserLoginMockData = { "username": "Aladdin" }
 const MsgMockData = { msgAuthor: "Aladdin", msgText: "Testing" }
 let ServerSentJWT;
 
-
-
+beforeAll(async () => {
+  const MongoUri = process.env.MONGO_URI || process.argv[2];
+  const mongoClient = new MongoClient(MongoUri);
+  await mongoClient.connect()
+})
+afterAll(() => {
+  mongoClient.close()
+});
 
 describe('Login', () => {
 
