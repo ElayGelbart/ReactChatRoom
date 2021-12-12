@@ -1,0 +1,14 @@
+name: Server Side Testing
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2
+      - uses: actions/setup-node@1
+      - run: npm ci
+      - run: npm test
