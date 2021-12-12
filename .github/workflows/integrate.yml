@@ -4,11 +4,15 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  ENV_FILE: ${{ secrets.ENV_FILE}}
+
 jobs:
   test_pull_request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v1
       - run: npm ci
+      - run: echo "$ENV_FILE" > .env
       - run: npm test

@@ -24,6 +24,7 @@ export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
       UsersArrayJSX.push(<UsernameLogged username={user.username} />);
     }
     setUserLoggedList(UsersArrayJSX);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props]);
 
   return (
