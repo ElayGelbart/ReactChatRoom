@@ -7,10 +7,6 @@ import { JWTSALT } from "../secret";
 
 const chatRouter = express.Router();
 
-type UserSchema = {
-  username: string;
-};
-
 chatRouter.get(
   "/stream",
   async (
