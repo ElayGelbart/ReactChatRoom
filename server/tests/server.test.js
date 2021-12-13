@@ -1,12 +1,13 @@
-import server from "../server.ts";
+import server from "../server.ts"
 import request from "supertest"
 import async from "async"
+import { mongoClient } from "../server"
+import { MongoClient } from "mongodb"
+import { listen } from "../index"
+require("dotenv").config();
 const UserLoginMockData = { "username": "Aladdin" }
 const MsgMockData = { msgAuthor: "Aladdin", msgText: "Testing" }
 let ServerSentJWT;
-
-
-
 
 describe('Login', () => {
 
@@ -68,7 +69,7 @@ describe('EventSource', () => {
           const resObj = JSON.parse(stringBuffer);
           expect(resObj.users.length > 0).toBe(true)
         })
-      }).timeout(1000).catch(() => { done() })
+      }).timeout({ response: 4000, deadline: 4500 }).catch(() => { done() })
   })
   describe('Post Msgs', () => {
     it('should fail 403 with invalid JWT', (done) => {
@@ -86,7 +87,7 @@ describe('EventSource', () => {
         function (cb) {
           request(server).post("/chat/new/msg")
             .set("Authorization", `Bearer ${ServerSentJWT}`)
-            .send(MsgMockData).expect(200, cb)
+            .send(MsgMockData).then(cb())
         },
         function (cb) {
           request(server).get("/chat/stream") // Basic SSE event
@@ -110,5 +111,13 @@ describe('EventSource', () => {
 })
 
 
+afterAll(async () => {
+  listen.close(() => {
+    console.log("server closed")
+  })
+  setTimeout(async () => {
+    await mongoClient.close()
+  }, 3000)
+});
 
 
