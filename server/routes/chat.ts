@@ -84,8 +84,8 @@ chatRouter.post("/new/msg", checkAuthJWT, (req, res, next): void => {
   const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
   console.log(userMsgObj, "MSGMSG 4TEST");
 
-  res.send("sucseesed");
   MsgEvent.emit("sendNewMsg", userMsgObj);
+  res.send("sucseesed");
 });
 
 export default chatRouter;
