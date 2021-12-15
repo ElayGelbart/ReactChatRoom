@@ -129,6 +129,8 @@ afterAll(async () => {
   listen.close(() => {
     console.log("server closed")
   })
+  await mongoDB.collection("Users").deleteMany({})
+  await mongoDB.collection("Msgs").deleteMany({})
   setTimeout(async () => {
     await mongoClient.close()
   }, 3000)

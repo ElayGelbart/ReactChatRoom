@@ -4,7 +4,7 @@
   "description": "Chat Room",
   "main": "index.js",
   "scripts": {
-    "test": "jest --forceExit --verbose ./tests",
+    "test": "cross-env NODE_ENV=TEST jest --forceExit --verbose ./tests",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts"
   },
@@ -23,6 +23,7 @@
     "@shelf/jest-mongodb": "^2.1.1",
     "async": "^3.2.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "eventsource": "^1.1.0",
     "express": "^4.17.1",
