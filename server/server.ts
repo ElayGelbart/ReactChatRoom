@@ -13,7 +13,8 @@ const MongoUri =
     : process.env.MONGO_URI;
 console.log(MongoUri);
 export const mongoClient = new MongoClient(MongoUri as string);
-export const mongoDB = mongoClient.db();
+export const UsersCollection = mongoClient.db().collection("Users");
+export const MsgsCollection = mongoClient.db().collection("Msgs");
 mongoClient
   .connect()
   .then(() => {

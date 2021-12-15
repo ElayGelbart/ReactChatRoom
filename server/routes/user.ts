@@ -4,7 +4,7 @@ import validator from "validator";
 import crypto from "crypto";
 import { JWTSALT } from "../secret";
 import checkAuthJWT from "../middleware/security/Auth";
-import { mongoDB } from "../server";
+import { UsersCollection } from "../server";
 require("dotenv").config();
 interface RequestBodyUser {
   username: string;
@@ -22,9 +22,7 @@ userRouter.post("/login", async (req, res, next) => {
     return;
   }
   try {
-    const userFound = await mongoDB
-      .collection("Users")
-      .findOne({ username: username });
+    const userFound = await UsersCollection.findOne({ username: username });
     if (!userFound || !process.env.HASHPASS_KEY) {
       next({ status: 400, msg: "Bad Login information" });
       return;
@@ -63,9 +61,7 @@ userRouter.post("/register", async (req, res, next) => {
     return;
   }
   try {
-    const userFound = await mongoDB
-      .collection("Users")
-      .findOne({ username: username });
+    const userFound = await UsersCollection.findOne({ username: username });
     if (userFound || !process.env.HASHPASS_KEY) {
       next({ status: 400, msg: "pick other username" });
       return;
@@ -74,9 +70,7 @@ userRouter.post("/register", async (req, res, next) => {
       .createHmac("sha256", process.env.HASHPASS_KEY)
       .update(password)
       .digest("hex");
-    await mongoDB
-      .collection("Users")
-      .insertOne({ username, email, password: hashpass });
+    await UsersCollection.insertOne({ username, email, password: hashpass });
     res.send();
   } catch (err) {
     next({ status: 500, msg: "something went wrong" });
@@ -97,7 +91,7 @@ userRouter.post("/auth", checkAuthJWT, async (req, res, next) => {
     }
     console.log(cookieUserObj, "cookieauth");
 
-    await mongoDB.collection("Users").insertOne(cookieUserObj);
+    await UsersCollection.insertOne(cookieUserObj);
     res.send(cookieUserObj);
   } catch (err) {
     console.log(err);

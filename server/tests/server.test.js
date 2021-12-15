@@ -1,7 +1,7 @@
 import server from "../server.ts"
 import request from "supertest"
 import async from "async"
-import { mongoClient, mongoDB } from "../server"
+import { mongoClient, MsgsCollection, UsersCollection } from "../server"
 import { listen } from "../index"
 require("dotenv").config();
 const UserLoginMockData = { "username": "Aladdin", "password": "123!@#qweQWE", "email": "Aladin@gmail.com" }
@@ -16,7 +16,7 @@ describe('Login & Register', () => {
     it('should register with valid data and get 200 ok', async () => {
       const response = await request(server).post("/user/register").send(UserLoginMockData)
       expect(response.statusCode).toBe(200)
-      const userObj = await mongoDB.collection("Users").findOne({ username: UserLoginMockData.username })
+      const userObj = await UsersCollection.findOne({ username: UserLoginMockData.username })
       expect(userObj.email).toBe("Aladin@gmail.com")
     });
 
@@ -129,8 +129,8 @@ afterAll(async () => {
   listen.close(() => {
     console.log("server closed")
   })
-  await mongoDB.collection("Users").deleteMany({})
-  await mongoDB.collection("Msgs").deleteMany({})
+  await UsersCollection.deleteMany({})
+  await MsgsCollection.deleteMany({})
   setTimeout(async () => {
     await mongoClient.close()
   }, 3000)
