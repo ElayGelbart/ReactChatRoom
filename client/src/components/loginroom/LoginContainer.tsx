@@ -1,9 +1,12 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function LoginContainer() {
+  const [passwordInputProps, setPasswordInputProps] = useState({
+    error: false,
+  });
   const LoginUsernameInput = useRef<HTMLInputElement>(null);
   const LoginPasswordInput = useRef<HTMLInputElement>(null);
 
@@ -36,8 +39,7 @@ export default function LoginContainer() {
       });
       navigate("/chat");
     } catch (err: unknown) {
-      alert("cant login");
-      console.log(err);
+      setPasswordInputProps({ error: true });
     }
   }
 
@@ -54,6 +56,7 @@ export default function LoginContainer() {
         autoFocus={true}
       />
       <TextField
+        error={passwordInputProps.error}
         inputRef={LoginPasswordInput}
         id="loginPasswordInput"
         label="Password"
