@@ -9,23 +9,25 @@ const MsgMockData = { msgAuthor: "Aladdin", msgText: "Testing" }
 let ServerSentJWT;
 
 describe('Login & Register', () => {
-
+  beforeAll(async () => {
+    await mongoClient.connect()
+  })
   describe('Register', () => {
-    it('should register with valid data and get 200 ok', () => {
+    it('should register with valid data and get 200 ok', async () => {
       const response = await request(server).post("/user/register").send(UserLoginMockData)
       expect(response.statusCode).toBe(200)
       const userObj = await mongoDB.collection("Users").findOne({ username: UserLoginMockData.username })
       expect(userObj.email).toBe("Aladin@gmail.com")
     });
 
-    it('should fail register with invalid data get and get 400', () => {
+    it('should fail register with invalid data get and get 400', async () => {
       const response = await request(server).post("/user/register").send({ username: "s", password: "as", email: "asd" })
       expect(response.statusCode).toBe(400)
     });
   })
 
 
-  describe('Login with Username in JSON', () => {
+  describe('Login', () => {
     it('should Response with cookie and 200 status Code', async () => {
       const response = await request(server).post("/user/login").send(UserLoginMockData)
         .expect(200)
@@ -33,15 +35,13 @@ describe('Login & Register', () => {
       ServerSentJWT = response.headers["set-cookie"][0].match(/\w+\.\w+\..+?(?=;)/)[0];
     })
 
-  })
-
-  describe('Login without Username JSON', () => {
     it('should response with 400 status code', async () => {
       const response = await request(server).post("/user/login").send()
       expect(response.statusCode).toBe(400)
     })
-
   })
+
+
 
 
 })
