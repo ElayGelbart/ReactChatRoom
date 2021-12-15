@@ -1,15 +1,29 @@
 import server from "../server.ts"
 import request from "supertest"
 import async from "async"
-import { mongoClient } from "../server"
-import { MongoClient } from "mongodb"
+import { mongoClient, mongoDB } from "../server"
 import { listen } from "../index"
 require("dotenv").config();
-const UserLoginMockData = { "username": "Aladdin" }
+const UserLoginMockData = { "username": "Aladdin", "password": "123!@#qweQWE", "email": "Aladin@gmail.com" }
 const MsgMockData = { msgAuthor: "Aladdin", msgText: "Testing" }
 let ServerSentJWT;
 
-describe('Login', () => {
+describe('Login & Register', () => {
+
+  describe('Register', () => {
+    it('should register with valid data and get 200 ok', () => {
+      const response = await request(server).post("/user/register").send(UserLoginMockData)
+      expect(response.statusCode).toBe(200)
+      const userObj = await mongoDB.collection("Users").findOne({ username: UserLoginMockData.username })
+      expect(userObj.email).toBe("Aladin@gmail.com")
+    });
+
+    it('should fail register with invalid data get and get 400', () => {
+      const response = await request(server).post("/user/register").send({ username: "s", password: "as", email: "asd" })
+      expect(response.statusCode).toBe(400)
+    });
+  })
+
 
   describe('Login with Username in JSON', () => {
     it('should Response with cookie and 200 status Code', async () => {

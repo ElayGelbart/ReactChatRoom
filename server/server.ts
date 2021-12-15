@@ -8,10 +8,11 @@ require("dotenv").config();
 
 const MongoUri = process.env.MONGO_URI || process.argv[2];
 export const mongoClient = new MongoClient(MongoUri);
+export const mongoDB = mongoClient.db();
 mongoClient
   .connect()
-  .then(() => {
-    console.log("mongodb connected");
+  .then((res) => {
+    console.log("mongodb connected", res);
   })
   .catch((err) => {
     console.log(`${err} happend`);

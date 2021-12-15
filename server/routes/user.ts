@@ -2,7 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { JWTSALT } from "../secret";
 import checkAuthJWT from "../middleware/security/Auth";
-import { mongoClient } from "../server";
+import { mongoDB } from "../server";
 
 const userRouter = express.Router();
 
@@ -20,6 +20,8 @@ userRouter.post("/login", (req, res, next) => {
   res.send("Login Sucssued");
 });
 
+userRouter.post("/register");
+
 userRouter.post("/auth", checkAuthJWT, async (req, res, next) => {
   try {
     const { authorization } = req.headers;
@@ -34,10 +36,7 @@ userRouter.post("/auth", checkAuthJWT, async (req, res, next) => {
     }
     console.log(cookieUserObj, "cookieauth");
 
-    await mongoClient
-      .db("ReactChatRoom")
-      .collection("Users")
-      .insertOne(cookieUserObj);
+    await mongoDB.collection("Users").insertOne(cookieUserObj);
     res.send(cookieUserObj);
   } catch (err) {
     console.log(err);

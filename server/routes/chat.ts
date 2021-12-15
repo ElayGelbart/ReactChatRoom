@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { MsgEvent } from "../events/MsgEvent";
-import { mongoClient } from "../server";
+import { mongoDB } from "../server";
 import checkAuthJWT from "../middleware/security/Auth";
 import { JWTSALT } from "../secret";
 
@@ -34,36 +34,19 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
       msgText: `${userObj.username} Connected`,
       msgTime: new Date(),
     });
-    const MSGS = await mongoClient
-      .db("ReactChatRoom")
-      .collection("Msgs")
-      .find()
-      .toArray();
-    const USERS = await mongoClient
-      .db("ReactChatRoom")
-      .collection("Users")
-      .find()
-      .toArray();
+    const MSGS = await mongoDB.collection("Msgs").find().toArray();
+    const USERS = await mongoDB.collection("Users").find().toArray();
     MsgEvent.on("sendInfo", async () => {
-      const MSGS = await mongoClient
-        .db("ReactChatRoom")
-        .collection("Msgs")
-        .find()
-        .toArray();
-      const USERS = await mongoClient
-        .db("ReactChatRoom")
-        .collection("Users")
-        .find()
-        .toArray();
+      const MSGS = await mongoDB.collection("Msgs").find().toArray();
+      const USERS = await mongoDB.collection("Users").find().toArray();
       res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
     });
     res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
 
     req.on("close", async () => {
-      await mongoClient
-        .db("ReactChatRoom")
+      await mongoDB
         .collection("Users")
-        .deleteOne({ username: userObj.username });
+        .deleteMany({ username: userObj.username });
       MsgEvent.emit("sendNewMsg", {
         msgAuthor: "Server",
         msgText: `${userObj.username} Disconnected`,
