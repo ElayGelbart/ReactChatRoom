@@ -121,8 +121,8 @@ describe('EventSource', () => {
                 const stringBuffer = serverBuffer.toString().replace("data:", "");
                 console.log(stringBuffer)
                 const resObj = JSON.parse(stringBuffer);
-                expect(resObj.msgs[0].msgText).toBe("Testing")
-                expect(resObj.msgs[1].msgText).toBe("Aladdin Connected")
+                expect(resObj.msgs[0].msgText).toBe("Aladdin Connected")
+                expect(resObj.msgs[1].msgText).toBe("Testing")
               })
             })
             .timeout({ response: 4000, deadline: 4500 }).catch(() => cb())
