@@ -2,7 +2,6 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 import crypto from "crypto";
-import { JWTSALT } from "../secret";
 import checkAuthJWT from "../middleware/security/Auth";
 import { UsersCollection } from "../server";
 require("dotenv").config();
@@ -35,9 +34,13 @@ userRouter.post("/login", async (req, res, next) => {
       next({ status: 400, msg: "Bad Login information" });
       return;
     }
-    const JWTcookie: string = jwt.sign({ username: username }, JWTSALT, {
-      expiresIn: "4h",
-    });
+    const JWTcookie: string = jwt.sign(
+      { username: username },
+      process.env.JWT_SALT as string,
+      {
+        expiresIn: "4h",
+      }
+    );
     res.cookie("JWT", JWTcookie, { maxAge: 1021031 });
     res.send();
   } catch (err) {
@@ -85,7 +88,7 @@ userRouter.post("/auth", checkAuthJWT, async (req, res, next) => {
     }
     console.log(authorization, "auth");
     const UserJWT = authorization.split(" ")[1];
-    const cookieUserObj = jwt.verify(UserJWT, JWTSALT);
+    const cookieUserObj = jwt.verify(UserJWT, process.env.JWT_SALT as string);
     if (typeof cookieUserObj === "string") {
       throw cookieUserObj;
     }

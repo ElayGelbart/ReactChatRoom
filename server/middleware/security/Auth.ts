@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import express from "express";
-const JWTSALT = "shhhh";
+require("dotenv").config();
+const JWTSALT = process.env.JWT_SALT;
 
 export default function checkAuthJWT(
   req: express.Request,
@@ -19,7 +20,10 @@ export default function checkAuthJWT(
     return;
   }
   try {
-    const { username } = jwt.verify(UserJWT, JWTSALT) as jwt.JwtPayload;
+    const { username } = jwt.verify(
+      UserJWT,
+      JWTSALT as string
+    ) as jwt.JwtPayload;
     req.username = username;
     next();
     return;
