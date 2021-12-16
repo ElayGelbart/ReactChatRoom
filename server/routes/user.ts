@@ -90,8 +90,6 @@ userRouter.post("/auth", checkAuthJWT, async (req, res, next) => {
       throw cookieUserObj;
     }
     console.log(cookieUserObj, "cookieauth");
-
-    await UsersCollection.insertOne(cookieUserObj);
     res.send(cookieUserObj);
   } catch (err) {
     console.log(err);

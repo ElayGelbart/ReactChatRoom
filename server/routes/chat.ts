@@ -1,12 +1,13 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { MsgEvent } from "../events/MsgEvent";
-import { UsersCollection, MsgsCollection } from "../server";
+import { MsgsCollection } from "../server";
 import checkAuthJWT from "../middleware/security/Auth";
 import { JWTSALT } from "../secret";
 
 const chatRouter = express.Router();
 
+const LOGGEDUSERS: { username: string }[] = [];
 chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   res.set({
     "Content-Type": "text/event-stream",
@@ -17,7 +18,6 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   });
   // Security check
   const { cookie } = req.headers;
-
   try {
     if (!cookie) {
       throw cookie;
@@ -29,28 +29,30 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
     if (typeof userObj === "string") {
       throw userObj;
     }
+
     MsgEvent.emit("sendNewMsg", {
       msgAuthor: "Server",
       msgText: `${userObj.username} Connected`,
-      msgTime: new Date(),
     });
-
+    LOGGEDUSERS.push(userObj.username);
     const MSGS = await MsgsCollection.find().toArray();
-    const USERS = await UsersCollection.find().toArray();
-    res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
+    res.write(`data:${JSON.stringify({ msgs: MSGS, users: LOGGEDUSERS })}\n\n`);
 
     MsgEvent.on("sendInfo", async () => {
       const MSGS = await MsgsCollection.find().toArray();
-      const USERS = await UsersCollection.find().toArray();
-      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
+      res.write(
+        `data:${JSON.stringify({ msgs: MSGS, users: LOGGEDUSERS })}\n\n`
+      );
     });
 
     req.on("close", async () => {
-      await UsersCollection.deleteMany({ username: userObj.username });
+      const usernameIndex = LOGGEDUSERS.findIndex(
+        ({ username }) => username === userObj.username
+      );
+      LOGGEDUSERS.splice(usernameIndex, 1);
       MsgEvent.emit("sendNewMsg", {
         msgAuthor: "Server",
         msgText: `${userObj.username} Disconnected`,
-        msgTime: new Date(),
       });
     });
   } catch (err) {
@@ -64,7 +66,7 @@ chatRouter.post("/new/msg", checkAuthJWT, (req, res, next): void => {
     next({ status: 400, msg: "Need More Fields" });
     return;
   }
-  const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
+  const userMsgObj = { msgAuthor, msgText };
   console.log(userMsgObj, "MSGMSG 4TEST");
 
   MsgEvent.emit("sendNewMsg", userMsgObj);

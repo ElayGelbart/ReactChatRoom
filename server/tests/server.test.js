@@ -11,6 +11,8 @@ let ServerSentJWT;
 describe('Login & Register', () => {
   beforeAll(async () => {
     await mongoClient.connect()
+    await MsgsCollection.deleteMany({})
+    await UsersCollection.deleteMany({})
   })
   describe('Register', () => {
     it('should register with valid data and get 200 ok', async () => {
