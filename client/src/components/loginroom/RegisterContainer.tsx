@@ -2,12 +2,21 @@ import { useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import validateFieldsWithErrors from "../../utils/inputvalidation";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const InputStyle = {
   margin: 10,
 };
 
-export default function RegisterContainer() {
+interface RegisterProps {
+  LoginView: State.ViewInterface;
+  setLoginView: React.Dispatch<React.SetStateAction<State.ViewInterface>>;
+}
+
+export default function RegisterContainer({
+  LoginView,
+  setLoginView,
+}: RegisterProps) {
   const [usernameInputProps, setUsernameInputProps] = useState({
     error: false,
     text: "Enter Username",
@@ -64,56 +73,72 @@ export default function RegisterContainer() {
         });
         return;
       }
-      alert("user added to database you can login");
+      setLoginView({ login: "0%", register: "100%" });
     } catch (err) {
       alert(err);
     }
   }
 
   return (
-    <div id="registerContainer" className="userMangmentContainer">
-      <h1 style={{ marginBottom: 50 }}>Register</h1>
+    <div
+      id="registerContainer"
+      style={{ left: LoginView.register }}
+      className="userMangmentContainer"
+    >
+      <div id="registerDiv" className="userMangmentDiv">
+        <h1>Register</h1>
 
-      <TextField
-        style={InputStyle}
-        className="loginPageInput"
-        error={usernameInputProps.error}
-        inputRef={registerUsernameInput}
-        id="registerUsernameInput"
-        label="UserName"
-        variant="outlined"
-        helperText={usernameInputProps.text}
-      />
-      <TextField
-        style={InputStyle}
-        className="loginPageInput"
-        error={passwordInputProps.error}
-        inputRef={registerPasswordInput}
-        id="registerPasswordInput"
-        label="Password"
-        type="password"
-        variant="outlined"
-        helperText={passwordInputProps.text}
-      />
-      <TextField
-        style={InputStyle}
-        className="loginPageInput"
-        error={emailInputProps.error}
-        inputRef={registerEmailInput}
-        id="registerEmailInput"
-        label="Email"
-        type="email"
-        variant="outlined"
-        helperText={emailInputProps.text}
-      />
-      <Button
-        variant="contained"
-        onClick={async () => {
-          await handleRegister();
-        }}
-      >
-        Register
-      </Button>
+        <TextField
+          style={InputStyle}
+          className="loginPageInput"
+          error={usernameInputProps.error}
+          inputRef={registerUsernameInput}
+          id="registerUsernameInput"
+          label="UserName"
+          variant="outlined"
+          helperText={usernameInputProps.text}
+        />
+        <TextField
+          style={InputStyle}
+          className="loginPageInput"
+          error={passwordInputProps.error}
+          inputRef={registerPasswordInput}
+          id="registerPasswordInput"
+          label="Password"
+          type="password"
+          variant="outlined"
+          helperText={passwordInputProps.text}
+        />
+        <TextField
+          style={InputStyle}
+          className="loginPageInput"
+          error={emailInputProps.error}
+          inputRef={registerEmailInput}
+          id="registerEmailInput"
+          label="Email"
+          type="email"
+          variant="outlined"
+          helperText={emailInputProps.text}
+        />
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await handleRegister();
+          }}
+        >
+          Register
+        </Button>
+        <div
+          className="goTo"
+          id="goToLogin"
+          onClick={() => {
+            setLoginView({ login: "0%", register: "100%" });
+          }}
+        >
+          <ChevronLeftIcon />
+          Login
+        </div>
+      </div>
     </div>
   );
 }

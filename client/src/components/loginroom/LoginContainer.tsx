@@ -2,18 +2,25 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const InputStyle = {
   margin: 10,
 };
 
-export default function LoginContainer() {
+interface LoginProps {
+  LoginView: State.ViewInterface;
+  setLoginView: React.Dispatch<React.SetStateAction<State.ViewInterface>>;
+}
+export default function LoginContainer({
+  LoginView,
+  setLoginView,
+}: LoginProps) {
   const [passwordInputProps, setPasswordInputProps] = useState({
     error: false,
   });
   const LoginUsernameInput = useRef<HTMLInputElement>(null);
   const LoginPasswordInput = useRef<HTMLInputElement>(null);
-
   const navigate = useNavigate();
 
   async function handleLogin(): Promise<void> {
@@ -47,12 +54,14 @@ export default function LoginContainer() {
     }
   }
 
-  function moveToRegister() {}
-
   return (
-    <div id="loginContainer" className="userMangmentContainer">
-      <div id="loginDiv">
-        <h1 style={{ marginBottom: 50 }}>Login</h1>
+    <div
+      id="loginContainer"
+      style={{ left: LoginView.login }}
+      className="userMangmentContainer"
+    >
+      <div id="loginDiv" className="userMangmentDiv">
+        <h1>Login</h1>
         <div id="loginFields">
           <TextField
             style={InputStyle}
@@ -86,12 +95,14 @@ export default function LoginContainer() {
         </Button>
 
         <div
+          className="goTo"
           id="goToRegister"
           onClick={() => {
-            moveToRegister();
+            setLoginView({ login: "-100%", register: "0%" });
           }}
         >
           Register
+          <ChevronRightIcon />
         </div>
       </div>
     </div>
