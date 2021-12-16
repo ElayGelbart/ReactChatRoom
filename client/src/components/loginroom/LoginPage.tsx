@@ -4,7 +4,7 @@ import RegisterContainer from "./RegisterContainer";
 
 export default function LoginPage() {
   return (
-    <div>
+    <div id="loginPage">
       <LoginContainer />
       <RegisterContainer />
     </div>

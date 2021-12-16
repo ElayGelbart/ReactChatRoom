@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+const InputStyle = {
+  margin: 10,
+};
+
 export default function LoginContainer() {
   const [passwordInputProps, setPasswordInputProps] = useState({
     error: false,
@@ -14,8 +18,8 @@ export default function LoginContainer() {
 
   async function handleLogin(): Promise<void> {
     try {
-      //TypeScript Type Validation
       if (
+        // typegurad
         LoginUsernameInput.current === null ||
         LoginPasswordInput.current === null
       ) {
@@ -43,34 +47,53 @@ export default function LoginContainer() {
     }
   }
 
+  function moveToRegister() {}
+
   return (
     <div id="loginContainer" className="userMangmentContainer">
-      <h1 style={{ marginBottom: 50 }}>Login</h1>
+      <div id="loginDiv">
+        <h1 style={{ marginBottom: 50 }}>Login</h1>
+        <div id="loginFields">
+          <TextField
+            style={InputStyle}
+            className="loginPageInput"
+            inputRef={LoginUsernameInput}
+            id="loginUsernameInput"
+            label="UserName"
+            variant="outlined"
+            helperText="Enter Username"
+            autoFocus={true}
+          />
+          <TextField
+            style={InputStyle}
+            className="loginPageInput"
+            error={passwordInputProps.error}
+            inputRef={LoginPasswordInput}
+            id="loginPasswordInput"
+            label="Password"
+            type="password"
+            variant="outlined"
+            helperText="Enter Password"
+          />
+        </div>
+        <Button
+          variant="contained"
+          onClick={async () => {
+            await handleLogin();
+          }}
+        >
+          Login
+        </Button>
 
-      <TextField
-        inputRef={LoginUsernameInput}
-        id="loginUsernameInput"
-        label="UserName"
-        variant="outlined"
-        helperText="Enter Username"
-        autoFocus={true}
-      />
-      <TextField
-        error={passwordInputProps.error}
-        inputRef={LoginPasswordInput}
-        id="loginPasswordInput"
-        label="Password"
-        variant="outlined"
-        helperText="Enter Password"
-      />
-      <Button
-        variant="contained"
-        onClick={async () => {
-          await handleLogin();
-        }}
-      >
-        Login
-      </Button>
+        <div
+          id="goToRegister"
+          onClick={() => {
+            moveToRegister();
+          }}
+        >
+          Register
+        </div>
+      </div>
     </div>
   );
 }

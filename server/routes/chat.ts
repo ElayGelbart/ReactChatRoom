@@ -1,13 +1,13 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import { MsgEvent } from "../events/MsgEvent";
 import { MsgsCollection } from "../server";
 import checkAuthJWT from "../middleware/security/Auth";
-import { JWTSALT } from "../secret";
 
 const chatRouter = express.Router();
 
 const LOGGEDUSERS: { username: string }[] = [];
+
+chatRouter.use(checkAuthJWT); //Middleware for auth
 chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   res.set({
     "Content-Type": "text/event-stream",
@@ -17,24 +17,12 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
     "Access-Control-Allow-Credentials": "true",
   });
   // Security check
-  const { cookie } = req.headers;
   try {
-    if (!cookie) {
-      throw cookie;
-    }
-    const userCookieJWT = cookie.split("=")[1];
-    const userObj = jwt.verify(userCookieJWT, JWTSALT);
-    console.log(userObj, "user Obj 4test");
-
-    if (typeof userObj === "string") {
-      throw userObj;
-    }
-
     MsgEvent.emit("sendNewMsg", {
       msgAuthor: "Server",
-      msgText: `${userObj.username} Connected`,
+      msgText: `${req.username} Connected`,
     });
-    LOGGEDUSERS.push(userObj.username);
+    LOGGEDUSERS.push(req.username);
     const MSGS = await MsgsCollection.find().toArray();
     res.write(`data:${JSON.stringify({ msgs: MSGS, users: LOGGEDUSERS })}\n\n`);
 
@@ -47,12 +35,12 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
 
     req.on("close", async () => {
       const usernameIndex = LOGGEDUSERS.findIndex(
-        ({ username }) => username === userObj.username
+        ({ username }) => username === req.username
       );
       LOGGEDUSERS.splice(usernameIndex, 1);
       MsgEvent.emit("sendNewMsg", {
         msgAuthor: "Server",
-        msgText: `${userObj.username} Disconnected`,
+        msgText: `${req.username} Disconnected`,
       });
     });
   } catch (err) {
@@ -60,7 +48,7 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   }
 });
 
-chatRouter.post("/new/msg", checkAuthJWT, (req, res, next): void => {
+chatRouter.post("/new/msg", (req, res, next): void => {
   const { msgAuthor, msgText }: { [key: string]: string } = req.body;
   if (!msgAuthor || !msgText) {
     next({ status: 400, msg: "Need More Fields" });

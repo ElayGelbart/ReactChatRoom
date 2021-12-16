@@ -3,6 +3,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import validateFieldsWithErrors from "../../utils/inputvalidation";
 
+const InputStyle = {
+  margin: 10,
+};
+
 export default function RegisterContainer() {
   const [usernameInputProps, setUsernameInputProps] = useState({
     error: false,
@@ -58,7 +62,7 @@ export default function RegisterContainer() {
           error: true,
           text: "Username Taken",
         });
-        return; // alert username taken
+        return;
       }
       alert("user added to database you can login");
     } catch (err) {
@@ -71,6 +75,8 @@ export default function RegisterContainer() {
       <h1 style={{ marginBottom: 50 }}>Register</h1>
 
       <TextField
+        style={InputStyle}
+        className="loginPageInput"
         error={usernameInputProps.error}
         inputRef={registerUsernameInput}
         id="registerUsernameInput"
@@ -79,6 +85,8 @@ export default function RegisterContainer() {
         helperText={usernameInputProps.text}
       />
       <TextField
+        style={InputStyle}
+        className="loginPageInput"
         error={passwordInputProps.error}
         inputRef={registerPasswordInput}
         id="registerPasswordInput"
@@ -88,10 +96,13 @@ export default function RegisterContainer() {
         helperText={passwordInputProps.text}
       />
       <TextField
+        style={InputStyle}
+        className="loginPageInput"
         error={emailInputProps.error}
         inputRef={registerEmailInput}
         id="registerEmailInput"
         label="Email"
+        type="email"
         variant="outlined"
         helperText={emailInputProps.text}
       />

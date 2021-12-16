@@ -36,7 +36,7 @@ userRouter.post("/login", async (req, res, next) => {
       return;
     }
     const JWTcookie: string = jwt.sign({ username: username }, JWTSALT, {
-      expiresIn: "1h",
+      expiresIn: "4h",
     });
     res.cookie("JWT", JWTcookie, { maxAge: 1021031 });
     res.send();

@@ -8,12 +8,12 @@ const UserLoginMockData = { "username": "Aladdin", "password": "123!@#qweQWE", "
 const MsgMockData = { msgAuthor: "Aladdin", msgText: "Testing" }
 let ServerSentJWT;
 
+beforeAll(async () => {
+  await mongoClient.connect()
+  await UsersCollection.deleteMany({})
+  await MsgsCollection.deleteMany({})
+})
 describe('Login & Register', () => {
-  beforeAll(async () => {
-    await mongoClient.connect()
-    await MsgsCollection.deleteMany({})
-    await UsersCollection.deleteMany({})
-  })
   describe('Register', () => {
     it('should register with valid data and get 200 ok', async () => {
       const response = await request(server).post("/user/register").send(UserLoginMockData)
@@ -69,10 +69,15 @@ describe('General auth', () => {
 })
 
 describe('EventSource', () => {
+  beforeEach(async () => {
+    await MsgsCollection.deleteMany({})
+  })
+
   it('should get 403 without Cookie Auth', async () => {
     const response = await request(server).get("/chat/stream")
       .expect(403)
   })
+
   it('should get EventSource with Cookie Auth', (done) => {
     request(server).get("/chat/stream") // Basic SSE event
       .set("Cookie", `JWT=${ServerSentJWT}`)
@@ -116,7 +121,8 @@ describe('EventSource', () => {
                 const stringBuffer = serverBuffer.toString().replace("data:", "");
                 console.log(stringBuffer)
                 const resObj = JSON.parse(stringBuffer);
-                expect(resObj.msgs[resObj.msgs.length - 1].msgText).toBe("Testing")
+                expect(resObj.msgs[0].msgText).toBe("Testing")
+                expect(resObj.msgs[1].msgText).toBe("Aladdin Connected")
               })
             })
             .timeout({ response: 4000, deadline: 4500 }).catch(() => cb())
