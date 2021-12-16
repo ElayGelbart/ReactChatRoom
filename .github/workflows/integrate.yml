@@ -6,6 +6,9 @@ on:
 
 env:
   MONGO_URI: ${{ secrets.MONGO_URI}}
+  MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI}}
+  HASHPASS_KEY: ${{ secrets.HASHPASS_KEY}}
+  JWT_SALT: ${{ secrets.JWT_SALT}}
 
 jobs:
   test_server:
