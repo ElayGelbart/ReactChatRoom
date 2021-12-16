@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import validator from "validator";
+import validateFieldsWithErrors from "../../utils/inputvalidation";
 
 export default function RegisterContainer() {
   const [usernameInputProps, setUsernameInputProps] = useState({
@@ -20,7 +20,7 @@ export default function RegisterContainer() {
   const registerPasswordInput = useRef<HTMLInputElement>(null);
   const registerEmailInput = useRef<HTMLInputElement>(null);
 
-  async function handleRegister() {
+  async function handleRegister(): Promise<void> {
     if (
       registerUsernameInput.current == null ||
       registerPasswordInput.current == null ||
@@ -32,41 +32,17 @@ export default function RegisterContainer() {
     const passwordValue: string = registerPasswordInput.current.value;
     const emailValue: string = registerEmailInput.current.value;
     if (
-      !validator.isAlphanumeric(usernameValue) ||
-      !validator.isLength(usernameValue, { min: 3, max: 20 })
+      !validateFieldsWithErrors(
+        usernameValue,
+        setUsernameInputProps,
+        passwordValue,
+        setPasswordInputProps,
+        emailValue,
+        setEmailInputProps
+      )
     ) {
-      setUsernameInputProps({
-        error: true,
-        text: "must Alphanumeric (3-20)",
-      });
       return;
     }
-    setUsernameInputProps({
-      error: false,
-      text: "must Alphanumeric (3-20)",
-    });
-    if (!validator.isStrongPassword(passwordValue, { minLength: 4 })) {
-      setPasswordInputProps({
-        error: true,
-        text: "must be strong Password",
-      });
-      return;
-    }
-    setPasswordInputProps({
-      error: false,
-      text: "must be strong Password",
-    });
-    if (!validator.isEmail(emailValue)) {
-      setEmailInputProps({
-        error: true,
-        text: "must be valid Email",
-      });
-      return;
-    }
-    setEmailInputProps({
-      error: false,
-      text: "must be valid Email",
-    });
     try {
       const response = await fetch("/user/register", {
         method: "POST",
