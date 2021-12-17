@@ -1,12 +1,13 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import { MsgEvent } from "../events/MsgEvent";
-import { mongoClient } from "../server";
+import { MsgsCollection } from "../server";
 import checkAuthJWT from "../middleware/security/Auth";
-import { JWTSALT } from "../secret";
 
 const chatRouter = express.Router();
 
+const LOGGEDUSERS: { username: string }[] = [];
+
+chatRouter.use(checkAuthJWT); //Middleware for auth
 chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   res.set({
     "Content-Type": "text/event-stream",
@@ -16,58 +17,30 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
     "Access-Control-Allow-Credentials": "true",
   });
   // Security check
-  const { cookie } = req.headers;
-
   try {
-    if (!cookie) {
-      throw cookie;
-    }
-    const userCookieJWT = cookie.split("=")[1];
-    const userObj = jwt.verify(userCookieJWT, JWTSALT);
-    console.log(userObj, "user Obj 4test");
-
-    if (typeof userObj === "string") {
-      throw userObj;
-    }
     MsgEvent.emit("sendNewMsg", {
       msgAuthor: "Server",
-      msgText: `${userObj.username} Connected`,
-      msgTime: new Date(),
+      msgText: `${req.username} Connected`,
     });
-    const MSGS = await mongoClient
-      .db("ReactChatRoom")
-      .collection("Msgs")
-      .find()
-      .toArray();
-    const USERS = await mongoClient
-      .db("ReactChatRoom")
-      .collection("Users")
-      .find()
-      .toArray();
+    LOGGEDUSERS.push(req.username);
+    const MSGS = await MsgsCollection.find().toArray();
+    res.write(`data:${JSON.stringify({ msgs: MSGS, users: LOGGEDUSERS })}\n\n`);
+
     MsgEvent.on("sendInfo", async () => {
-      const MSGS = await mongoClient
-        .db("ReactChatRoom")
-        .collection("Msgs")
-        .find()
-        .toArray();
-      const USERS = await mongoClient
-        .db("ReactChatRoom")
-        .collection("Users")
-        .find()
-        .toArray();
-      res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
+      const MSGS = await MsgsCollection.find().toArray();
+      res.write(
+        `data:${JSON.stringify({ msgs: MSGS, users: LOGGEDUSERS })}\n\n`
+      );
     });
-    res.write(`data:${JSON.stringify({ msgs: MSGS, users: USERS })}\n\n`);
 
     req.on("close", async () => {
-      await mongoClient
-        .db("ReactChatRoom")
-        .collection("Users")
-        .deleteOne({ username: userObj.username });
+      const usernameIndex = LOGGEDUSERS.findIndex(
+        ({ username }) => username === req.username
+      );
+      LOGGEDUSERS.splice(usernameIndex, 1);
       MsgEvent.emit("sendNewMsg", {
         msgAuthor: "Server",
-        msgText: `${userObj.username} Disconnected`,
-        msgTime: new Date(),
+        msgText: `${req.username} Disconnected`,
       });
     });
   } catch (err) {
@@ -75,13 +48,13 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
   }
 });
 
-chatRouter.post("/new/msg", checkAuthJWT, (req, res, next): void => {
+chatRouter.post("/new/msg", (req, res, next): void => {
   const { msgAuthor, msgText }: { [key: string]: string } = req.body;
   if (!msgAuthor || !msgText) {
     next({ status: 400, msg: "Need More Fields" });
     return;
   }
-  const userMsgObj = { msgAuthor, msgText, msgTime: new Date() };
+  const userMsgObj = { msgAuthor, msgText };
   console.log(userMsgObj, "MSGMSG 4TEST");
 
   MsgEvent.emit("sendNewMsg", userMsgObj);

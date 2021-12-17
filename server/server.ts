@@ -5,9 +5,16 @@ import ErrorHandler from "./middleware/error/generalErrorHandler";
 import userRouter from "./routes/user";
 import chatRouter from "./routes/chat";
 require("dotenv").config();
+console.log(process.env.NODE_ENV, "nodeenv");
 
-const MongoUri = process.env.MONGO_URI || process.argv[2];
-export const mongoClient = new MongoClient(MongoUri);
+const MongoUri =
+  process.env.NODE_ENV === "TEST"
+    ? process.env.MONGO_TEST_URI
+    : process.env.MONGO_URI;
+console.log(MongoUri);
+export const mongoClient = new MongoClient(MongoUri as string);
+export const UsersCollection = mongoClient.db().collection("Users");
+export const MsgsCollection = mongoClient.db().collection("Msgs");
 mongoClient
   .connect()
   .then(() => {

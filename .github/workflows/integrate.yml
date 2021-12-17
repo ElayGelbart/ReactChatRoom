@@ -6,6 +6,9 @@ on:
 
 env:
   MONGO_URI: ${{ secrets.MONGO_URI}}
+  MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI}}
+  HASHPASS_KEY: ${{ secrets.HASHPASS_KEY}}
+  JWT_SALT: ${{ secrets.JWT_SALT}}
 
 jobs:
   test_server:
@@ -16,5 +19,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - run: npm ci
+      - run: npm i
       - run: npm test

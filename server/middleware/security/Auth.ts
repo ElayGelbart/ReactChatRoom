@@ -1,6 +1,7 @@
 import * as jwt from "jsonwebtoken";
 import express from "express";
-const JWTSALT = "shhhh";
+require("dotenv").config();
+const JWTSALT = process.env.JWT_SALT;
 
 export default function checkAuthJWT(
   req: express.Request,
@@ -8,13 +9,22 @@ export default function checkAuthJWT(
   next: express.NextFunction
 ): void {
   const { authorization } = req.headers;
-  if (!authorization) {
+  const { cookie } = req.headers;
+  let UserJWT;
+  if (!authorization && cookie) {
+    UserJWT = cookie.split("=")[1];
+  } else if (authorization && !cookie) {
+    UserJWT = authorization.split(" ")[1];
+  } else {
     next({ status: 403, msg: "Need JWT" });
     return;
   }
   try {
-    const UserJWT = authorization.split(" ")[1];
-    jwt.verify(UserJWT, JWTSALT);
+    const { username } = jwt.verify(
+      UserJWT,
+      JWTSALT as string
+    ) as jwt.JwtPayload;
+    req.username = username;
     next();
     return;
   } catch (err) {
