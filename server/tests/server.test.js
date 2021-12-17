@@ -117,11 +117,11 @@ describe('EventSource', () => {
             const stringBuffer = serverBuffer.toString().replace("data:", "");
             console.log(stringBuffer)
             const resObj = JSON.parse(stringBuffer);
-            expect(resObj.msgs.length).toBe(2)
-            expect(resObj.msgs[1].msgText).toBe("Aladdin Connected")
+            expect(resObj.msgs).toHaveLength(2)
+            expect(resObj.msgs[0].msgText).toBe("Testing")
           })
-        })
-        .timeout({ response: 4000, deadline: 4500 }).catch((err) => { console.log(err) })
+        }).timeout(4500)
+        .catch((err) => { console.log(err) })
     });
   })
 })
