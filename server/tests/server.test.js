@@ -103,31 +103,25 @@ describe('EventSource', () => {
         .expect(400, done)
     });
 
-    it('should post New Msg with JWT and Msg object', (done) => {
-      async.series([
-        function (cb) {
-          request(server).post("/chat/new/msg")
-            .set("Authorization", `Bearer ${ServerSentJWT}`)
-            .send(MsgMockData).then(cb())
-        },
-        function (cb) {
-          request(server).get("/chat/stream") // Basic SSE event
-            .set("Cookie", `JWT=${ServerSentJWT}`)
-            .set("Connection", "keep-alive")
-            .set("Accept", "text/event-stream")
-            .buffer(true).parse((res) => {
-              res.on("data", (res) => {
-                const serverBuffer = Buffer.from(res, "utf-8")
-                const stringBuffer = serverBuffer.toString().replace("data:", "");
-                console.log(stringBuffer)
-                const resObj = JSON.parse(stringBuffer);
-                expect(resObj.msgs[0].msgText).toBe("Aladdin Connected")
-                expect(resObj.msgs[1].msgText).toBe("Testing")
-              })
-            })
-            .timeout({ response: 4000, deadline: 4500 }).catch(() => cb())
-        },
-      ], done)
+    it('should post New Msg with JWT and Msg object', async () => {
+      await request(server).post("/chat/new/msg")
+        .set("Authorization", `Bearer ${ServerSentJWT}`)
+        .send(MsgMockData)
+      await request(server).get("/chat/stream") // Basic SSE event
+        .set("Cookie", `JWT=${ServerSentJWT}`)
+        .set("Connection", "keep-alive")
+        .set("Accept", "text/event-stream")
+        .buffer(true).parse((res) => {
+          res.on("data", (res) => {
+            const serverBuffer = Buffer.from(res, "utf-8")
+            const stringBuffer = serverBuffer.toString().replace("data:", "");
+            console.log(stringBuffer)
+            const resObj = JSON.parse(stringBuffer);
+            expect(resObj.msgs.length).toBe(2)
+            expect(resObj.msgs[1].msgText).toBe("Aladdin Connected")
+          })
+        })
+        .timeout({ response: 4000, deadline: 4500 }).catch((err) => { console.log(err) })
     });
   })
 })
