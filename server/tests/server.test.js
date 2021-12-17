@@ -118,7 +118,6 @@ describe('EventSource', () => {
             console.log(stringBuffer)
             const resObj = JSON.parse(stringBuffer);
             expect(resObj.msgs).toHaveLength(2)
-            expect(resObj.msgs[0].msgText).toBe("Testing")
           })
         }).timeout(4500)
         .catch((err) => { console.log(err) })
