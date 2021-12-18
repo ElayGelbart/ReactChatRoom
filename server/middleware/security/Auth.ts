@@ -24,6 +24,9 @@ export default function checkAuthJWT(
       UserJWT,
       JWTSALT as string
     ) as jwt.JwtPayload;
+    if (typeof username !== "string") {
+      throw username;
+    }
     req.username = username;
     next();
     return;
