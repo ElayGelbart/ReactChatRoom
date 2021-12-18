@@ -30,6 +30,7 @@ export default function SendChatContainer(props: SendChatProps) {
             msgTime={extractHNMfromISO(ISOtimeNOW)}
             classOfCreator="myMsg Msg"
             seenIndicator={<ClockSVG />}
+            colorNum={10}
           />,
         ];
       });

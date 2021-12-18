@@ -6,6 +6,7 @@ type MesseageProps = {
   msgTime: string;
   classOfCreator: string;
   seenIndicator: JSX.Element;
+  colorNum: number;
 };
 
 export default function Messeage(props: MesseageProps) {
@@ -13,15 +14,13 @@ export default function Messeage(props: MesseageProps) {
     if (props.msgAuthor === "Server") {
       return null;
     }
-    const randNum = Math.floor(Math.random() * 10) + 1;
-    const colorClass: string = `color${randNum}`;
 
     return (
       <>
         <span className="Tip">
           <Tip />
         </span>
-        <p className={`MsgAuthor ${colorClass}`}>{props.msgAuthor}</p>
+        <p className={`MsgAuthor color-${props.colorNum}`}>{props.msgAuthor}</p>
       </>
     );
   }

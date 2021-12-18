@@ -17,7 +17,9 @@ export default function ChatLog(props: ChatLogProps) {
     if (!props.allMsgArray) {
       return;
     }
+    const userColorArray: { username: string; colorNumber: number }[] = [];
     for (let messeage of props.allMsgArray) {
+      let colorNum: number = 10;
       const { msgAuthor, msgText, msgTime } = messeage;
       let msgTimeHour = extractHNMfromISO(msgTime);
       let classMsg: string = "";
@@ -25,6 +27,17 @@ export default function ChatLog(props: ChatLogProps) {
         classMsg = "myMsg";
       } else if (msgAuthor === "Server") {
         classMsg = "serverMsg";
+      } else {
+        const userObj = userColorArray.find(
+          (userObj) => userObj.username === msgAuthor
+        );
+        if (userObj) {
+          colorNum = userObj.colorNumber;
+        } else {
+          const randNum = Math.floor(Math.random() * 9) + 1;
+          colorNum = randNum;
+          userColorArray.push({ username: msgAuthor, colorNumber: colorNum });
+        }
       }
       MsgJSX.push(
         <Messeage
@@ -33,6 +46,7 @@ export default function ChatLog(props: ChatLogProps) {
           msgTime={msgTimeHour}
           classOfCreator={`${classMsg || "otherMsg"} Msg`}
           seenIndicator={<OneV />}
+          colorNum={colorNum}
         />
       );
     }
