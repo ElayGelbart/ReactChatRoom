@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
 import OneV from "../svg/OneV";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
@@ -11,7 +11,7 @@ type ChatLogProps = {
 
 export default function ChatLog(props: ChatLogProps) {
   const { username } = useContext(UsernameContext);
-
+  const endOfChat = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const MsgJSX: JSX.Element[] = [];
     if (!props.allMsgArray) {
@@ -39,5 +39,17 @@ export default function ChatLog(props: ChatLogProps) {
     props.setMsgComponents(MsgJSX);
   }, [props.allMsgArray]);
 
-  return <div id="ChatLog">{props.MsgComponents}</div>;
+  useEffect(() => {
+    if (!endOfChat.current) {
+      return;
+    }
+    endOfChat.current.scrollIntoView({ behavior: "smooth" });
+  }, [props.MsgComponents]);
+
+  return (
+    <div id="ChatLog">
+      {props.MsgComponents}
+      <div ref={endOfChat}></div>
+    </div>
+  );
 }
