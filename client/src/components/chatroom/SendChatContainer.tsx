@@ -64,7 +64,7 @@ export default function SendChatContainer(props: SendChatProps) {
           ref={UserMsgInput}
           id="inputSendChat"
           type="text"
-          placeholder="Type Something..."
+          placeholder="Messeage"
           onKeyDown={(e) => {
             EnterKeySendMsg(e);
           }}
