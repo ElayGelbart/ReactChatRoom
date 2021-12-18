@@ -5,7 +5,7 @@ import "./chatroom.css";
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
-import LoadingSVG from "../LoadingSVG";
+import LoadingSVG from "../svg/LoadingSVG";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 
