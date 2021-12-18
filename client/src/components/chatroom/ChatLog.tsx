@@ -1,14 +1,15 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import OneV from "../svg/OneV";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
-
+import extractHNMfromISO from "../../utils/extractHNMfromISO";
 type ChatLogProps = {
-  allMsgArray: { msgAuthor: string; msgText: string; msgTime: string }[];
+  allMsgArray: State.AllMsgInterface;
+  MsgComponents: JSX.Element[] | [];
+  setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
 };
 
 export default function ChatLog(props: ChatLogProps) {
-  const [MsgComponents, setMsgComponents] = useState<JSX.Element[]>([]);
   const { username } = useContext(UsernameContext);
 
   useEffect(() => {
@@ -18,11 +19,7 @@ export default function ChatLog(props: ChatLogProps) {
     }
     for (let messeage of props.allMsgArray) {
       const { msgAuthor, msgText, msgTime } = messeage;
-      let msgTimeHour = msgTime.split("T")[1];
-      msgTimeHour = String(String(msgTimeHour).split(".")[0])
-        .split(":")
-        .slice(0, 2)
-        .join(":");
+      let msgTimeHour = extractHNMfromISO(msgTime);
       let classMsg: string = "";
       if (username === msgAuthor) {
         classMsg = "myMsg";
@@ -39,8 +36,8 @@ export default function ChatLog(props: ChatLogProps) {
         />
       );
     }
-    setMsgComponents(MsgJSX);
-  }, [props]);
+    props.setMsgComponents(MsgJSX);
+  }, [props.allMsgArray]);
 
-  return <div id="ChatLog">{MsgComponents}</div>;
+  return <div id="ChatLog">{props.MsgComponents}</div>;
 }
