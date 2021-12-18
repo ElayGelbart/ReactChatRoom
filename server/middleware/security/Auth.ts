@@ -15,6 +15,8 @@ export default function checkAuthJWT(
     UserJWT = cookie.split("=")[1];
   } else if (authorization && !cookie) {
     UserJWT = authorization.split(" ")[1];
+  } else if (authorization && cookie) {
+    UserJWT = authorization.split(" ")[1];
   } else {
     next({ status: 403, msg: "Need JWT" });
     return;
@@ -24,9 +26,6 @@ export default function checkAuthJWT(
       UserJWT,
       JWTSALT as string
     ) as jwt.JwtPayload;
-    if (typeof username !== "string") {
-      throw username;
-    }
     req.username = username;
     next();
     return;
