@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import OneV from "../svg/OneV";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 
@@ -34,6 +35,7 @@ export default function ChatLog(props: ChatLogProps) {
           msgText={msgText}
           msgTime={msgTimeHour}
           classOfCreator={`${classMsg || "otherMsg"} Msg`}
+          seenIndicator={<OneV />}
         />
       );
     }

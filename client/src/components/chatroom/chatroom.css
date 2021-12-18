@@ -72,6 +72,10 @@
   background-color: rgba(225, 245, 254, 0.92);
   color: rgba(0, 0, 0, 0.88);
   border-radius: 7.5px;
+  width: auto;
+}
+.serverMsg .MsgTime svg {
+  display: none;
 }
 .myMsg {
   position: relative;
@@ -82,7 +86,7 @@
 .myMsg .Tip {
   left: -8px;
 }
-.myMsg svg {
+.myMsg .Tip svg {
   color: #dcf8c6;
 }
 
@@ -96,7 +100,7 @@
   right: -8px;
   transform: rotateY(180deg);
 }
-.otherMsg svg {
+.otherMsg .Tip svg {
   color: #fff;
 }
 

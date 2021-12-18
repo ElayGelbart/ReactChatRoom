@@ -1,11 +1,11 @@
 import React from "react";
-import OneV from "../svg/OneV";
 import Tip from "../svg/Tip";
 type MesseageProps = {
   msgAuthor: string;
   msgText: string;
   msgTime: string;
   classOfCreator: string;
+  seenIndicator: JSX.Element;
 };
 
 export default function Messeage(props: MesseageProps) {
@@ -22,9 +22,6 @@ export default function Messeage(props: MesseageProps) {
           <Tip />
         </span>
         <p className={`MsgAuthor ${colorClass}`}>{props.msgAuthor}</p>
-        <span className="MsgTime">
-          <OneV />
-        </span>
       </>
     );
   }
@@ -32,7 +29,10 @@ export default function Messeage(props: MesseageProps) {
     <div className={props.classOfCreator}>
       {showAuthor()}
       <p className="MsgText">{props.msgText}</p>
-      <p className="MsgTime">{props.msgTime}</p>
+      <p className="MsgTime">
+        {props.msgTime}
+        {props.seenIndicator}
+      </p>
     </div>
   );
 }
