@@ -23,3 +23,13 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "reactchatforumapp"
           heroku_email: "elaygelbart@gmail.com"
+          justlogin: true
+
+      - name: "Login to heroku registry"
+      - run: heroku container:login
+
+      - name: "Build and push to heroku registry"
+      - run: heroku container:push web --app email-service-web
+
+      - name: "Releases the container"
+      - run: heroku container:release web --app email-service-web
