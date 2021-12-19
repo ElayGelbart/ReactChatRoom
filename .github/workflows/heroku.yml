@@ -16,13 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
       - run: npm i
       - run: npm run build
-  deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server
-    steps:
-      - uses: actions/checkout@v2
+      - run: cd ../server
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
