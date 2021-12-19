@@ -51,7 +51,6 @@ export default function ChatLog(props: ChatLogProps) {
       );
     }
     props.setMsgComponents(MsgJSX);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.allMsgArray]);
 
