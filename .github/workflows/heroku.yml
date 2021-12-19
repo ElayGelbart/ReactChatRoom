@@ -25,11 +25,11 @@ jobs:
           heroku_email: "elaygelbart@gmail.com"
           justlogin: true
 
-        - name: "Login to heroku registry"
-        - run: heroku container:login
+      - name: "Login to heroku registry"
+        run: heroku container:login
 
-        - name: "Build and push to heroku registry"
-        - run: heroku container:push web --app email-service-web
+      - name: "Build and push to heroku registry"
+        run: heroku container:push web --app email-service-web
 
-        - name: "Releases the container"
-        - run: heroku container:release web --app email-service-web
+      - name: "Releases the container"
+        run: heroku container:release web --app email-service-web
