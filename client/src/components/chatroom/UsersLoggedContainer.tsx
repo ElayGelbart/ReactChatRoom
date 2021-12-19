@@ -3,7 +3,7 @@ import UsernameLogged from "./UsernameLogged";
 import { UsernameContext } from "./ChatPage";
 
 type UsersLoggedContainerProps = {
-  allUsersArray: { username: string }[];
+  allUsersArray: string[];
 };
 
 export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
@@ -18,10 +18,10 @@ export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
       return;
     }
     for (let user of props.allUsersArray) {
-      if (user.username === username) {
+      if (user === username) {
         continue;
       }
-      UsersArrayJSX.push(<UsernameLogged username={user.username} />);
+      UsersArrayJSX.push(<UsernameLogged username={user} />);
     }
     setUserLoggedList(UsersArrayJSX);
     // eslint-disable-next-line react-hooks/exhaustive-deps

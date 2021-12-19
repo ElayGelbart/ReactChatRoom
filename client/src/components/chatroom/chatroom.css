@@ -2,7 +2,7 @@
   height: 95vh;
   width: 90vw;
   display: grid;
-  background-color: #f7f7f7;
+  background-color: var(--container-bg-color);
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 0px 0px;
@@ -32,7 +32,7 @@
   grid-area: ChatLog;
   display: flex;
   flex-direction: column;
-  background-color: #e5ddd5;
+  background-color: var(--chatlog-bg-color);
   overflow-y: scroll;
 }
 
@@ -40,7 +40,7 @@
   padding: 9px 12px 11px;
   margin: 5px 10px;
   border-radius: 45px;
-  background-color: white;
+  background-color: #fff;
   height: 50%;
   display: inline-block;
   width: 100%;
@@ -65,39 +65,46 @@
   border-radius: 7.5px;
   padding: 10px;
 }
+.Msg:last-child {
+  margin-bottom: 0px;
+}
 .serverMsg {
   align-self: center;
   display: flex;
   justify-content: space-between;
-  background-color: rgba(225, 245, 254, 0.92);
-  color: rgba(0, 0, 0, 0.88);
+  background-color: var(--msg-server-bg-color);
+  color: var(--msg-server-color);
   border-radius: 7.5px;
+  width: auto;
+}
+.serverMsg .MsgTime svg {
+  display: none;
 }
 .myMsg {
   position: relative;
   align-self: flex-start;
   border-top-left-radius: 0;
-  background-color: #dcf8c6;
+  background-color: var(--msg-mymsg-bg-color);
 }
 .myMsg .Tip {
   left: -8px;
 }
-.myMsg svg {
-  color: #dcf8c6;
+.myMsg .Tip svg {
+  color: var(--msg-mymsg-bg-color);
 }
 
 .otherMsg {
   position: relative;
   align-self: flex-end;
   border-top-right-radius: 0;
-  background-color: #fff;
+  background-color: var(--msg-othermsg-bg-color);
 }
 .otherMsg .Tip {
   right: -8px;
   transform: rotateY(180deg);
 }
-.otherMsg svg {
-  color: #fff;
+.otherMsg .Tip svg {
+  color: var(--msg-othermsg-bg-color);
 }
 
 .Tip {
@@ -107,14 +114,45 @@
 
 .MsgTime {
   float: right;
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--msg-time-color);
 }
 #MyUserLogged {
   height: 10%;
-  background-color: #f7f7f7;
+  background-color: var(--container-bg-color);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
   font-weight: bolder;
+}
+
+.color-1 {
+  color: var(--color-purple);
+}
+.color-2 {
+  color: var(--color-olive);
+}
+.color-3 {
+  color: var(--color-purpleblue);
+}
+.color-4 {
+  color: var(--color-cyan);
+}
+.color-5 {
+  color: var(--color-blue);
+}
+.color-6 {
+  color: var(--color-orange);
+}
+.color-7 {
+  color: var(--color-brown);
+}
+.color-8 {
+  color: var(--color-redpink);
+}
+.color-9 {
+  color: var(--color-green);
+}
+.color-10 {
+  color: var(--color-yellow);
 }

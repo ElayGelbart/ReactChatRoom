@@ -5,7 +5,7 @@ import "./chatroom.css";
 import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
-import LoadingSVG from "../LoadingSVG";
+import LoadingSVG from "../svg/LoadingSVG";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 
@@ -13,7 +13,8 @@ export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
   const [UserInfo, setUserInfo] = useState({ username: "" });
   const [AllUserLoggedIn, setAllUserLoggedIn] = useState([]);
-  const [AllMsgs, setAllMsgs] = useState([]);
+  const [AllMsgsData, setAllMsgsData] = useState<State.AllMsgInterface>([]);
+  const [MsgComponents, setMsgComponents] = useState<JSX.Element[] | []>([]);
 
   async function setSSE() {
     const sse = new EventSource("http://localhost:8080/chat/stream", {
@@ -23,7 +24,7 @@ export default function ChatPage(): JSX.Element {
       const dataFromServer: { users: []; msgs: [] } = JSON.parse(e.data);
       console.log("meegssgeges", dataFromServer);
       setAllUserLoggedIn(dataFromServer.users);
-      setAllMsgs(dataFromServer.msgs);
+      setAllMsgsData(dataFromServer.msgs);
     };
     sse.onerror = (err) => {
       sse.close();
@@ -60,8 +61,12 @@ export default function ChatPage(): JSX.Element {
         <div id="chatContainer">
           <UsernameContext.Provider value={UserInfo}>
             <UsersLoggedContainer allUsersArray={AllUserLoggedIn} />
-            <SendChatContainer />
-            <ChatLog allMsgArray={AllMsgs} />
+            <SendChatContainer setMsgComponents={setMsgComponents} />
+            <ChatLog
+              MsgComponents={MsgComponents}
+              setMsgComponents={setMsgComponents}
+              allMsgArray={AllMsgsData}
+            />
           </UsernameContext.Provider>
         </div>
       </div>

@@ -1,8 +1,15 @@
-import React, { useRef, useContext } from "react";
+import { useRef, useContext } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { UsernameContext } from "./ChatPage";
+import Messeage from "./Messeage";
+import ClockSVG from "../svg/Clock";
+import extractHNMfromISO from "../../utils/extractHNMfromISO";
 
-export default function SendChatContainer() {
+interface SendChatProps {
+  setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
+}
+
+export default function SendChatContainer(props: SendChatProps) {
   const UserMsgInput = useRef<HTMLInputElement>(null);
   const { username } = useContext(UsernameContext);
 
@@ -13,6 +20,20 @@ export default function SendChatContainer() {
       }
       const UserMsgInputValue = UserMsgInput.current.value;
       const JWToken = document.cookie.split("=")[1];
+      props.setMsgComponents((prevState) => {
+        const ISOtimeNOW = new Date().toISOString().toString();
+        return [
+          ...prevState,
+          <Messeage
+            msgAuthor={username}
+            msgText={UserMsgInputValue}
+            msgTime={extractHNMfromISO(ISOtimeNOW)}
+            classOfCreator="myMsg Msg"
+            seenIndicator={<ClockSVG />}
+            colorNum={10}
+          />,
+        ];
+      });
       await fetch("/chat/new/msg", {
         method: "POST",
         headers: {
@@ -24,6 +45,7 @@ export default function SendChatContainer() {
           msgAuthor: username,
         }),
       });
+
       UserMsgInput.current.value = "";
     } catch (err) {
       console.log(err);
@@ -42,7 +64,7 @@ export default function SendChatContainer() {
           ref={UserMsgInput}
           id="inputSendChat"
           type="text"
-          placeholder="Type Something..."
+          placeholder="Messeage"
           onKeyDown={(e) => {
             EnterKeySendMsg(e);
           }}

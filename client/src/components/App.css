@@ -2,9 +2,29 @@
   margin: 0;
   padding: 0;
 }
-
+html {
+  --bg-color: #dddbd1;
+  --bg-top-color: #009688;
+  --container-bg-color: #f7f7f7;
+  --chatlog-bg-color: #e5ddd5;
+  --msg-server-bg-color: rgba(225, 245, 254, 0.92);
+  --msg-server-color: rgba(0, 0, 0, 0.88);
+  --msg-mymsg-bg-color: #dcf8c6;
+  --msg-othermsg-bg-color: #fff;
+  --msg-time-color: rgba(0, 0, 0, 0.3);
+  --color-purple: #ba33dc;
+  --color-olive: #91ab01;
+  --color-purpleblue: #8393ca;
+  --color-cyan: #6bcbef;
+  --color-blue: #1f7aec;
+  --color-orange: #ff8f2c;
+  --color-brown: #b04632;
+  --color-redpink: #fe7c7f;
+  --color-green: #029d00;
+  --color-yellow: #dfb610;
+}
 body {
-  background-color: #dddbd1;
+  background-color: var(--bg-color);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -13,7 +33,7 @@ body {
     Cantarell, Fira Sans, sans-serif;
 }
 body::after {
-  background-color: #009688;
+  background-color: var(--bg-top-color);
   position: fixed;
   top: 0;
   z-index: -1;

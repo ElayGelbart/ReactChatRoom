@@ -1,32 +1,43 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext, useRef } from "react";
+import OneV from "../svg/OneV";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
-
+import extractHNMfromISO from "../../utils/extractHNMfromISO";
 type ChatLogProps = {
-  allMsgArray: { msgAuthor: string; msgText: string; msgTime: string }[];
+  allMsgArray: State.AllMsgInterface;
+  MsgComponents: JSX.Element[] | [];
+  setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
 };
 
 export default function ChatLog(props: ChatLogProps) {
-  const [MsgComponents, setMsgComponents] = useState<JSX.Element[]>([]);
   const { username } = useContext(UsernameContext);
-
+  const endOfChat = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const MsgJSX: JSX.Element[] = [];
     if (!props.allMsgArray) {
       return;
     }
+    const userColorArray: { username: string; colorNumber: number }[] = [];
     for (let messeage of props.allMsgArray) {
+      let colorNum: number = 10;
       const { msgAuthor, msgText, msgTime } = messeage;
-      let msgTimeHour = msgTime.split("T")[1];
-      msgTimeHour = String(String(msgTimeHour).split(".")[0])
-        .split(":")
-        .slice(0, 2)
-        .join(":");
+      let msgTimeHour = extractHNMfromISO(msgTime);
       let classMsg: string = "";
       if (username === msgAuthor) {
         classMsg = "myMsg";
       } else if (msgAuthor === "Server") {
         classMsg = "serverMsg";
+      } else {
+        const userObj = userColorArray.find(
+          (userObj) => userObj.username === msgAuthor
+        );
+        if (userObj) {
+          colorNum = userObj.colorNumber;
+        } else {
+          const randNum = Math.floor(Math.random() * 9) + 1;
+          colorNum = randNum;
+          userColorArray.push({ username: msgAuthor, colorNumber: colorNum });
+        }
       }
       MsgJSX.push(
         <Messeage
@@ -34,11 +45,25 @@ export default function ChatLog(props: ChatLogProps) {
           msgText={msgText}
           msgTime={msgTimeHour}
           classOfCreator={`${classMsg || "otherMsg"} Msg`}
+          seenIndicator={<OneV />}
+          colorNum={colorNum}
         />
       );
     }
-    setMsgComponents(MsgJSX);
-  }, [props]);
+    props.setMsgComponents(MsgJSX);
+  }, [props.allMsgArray]);
 
-  return <div id="ChatLog">{MsgComponents}</div>;
+  useEffect(() => {
+    if (!endOfChat.current) {
+      return;
+    }
+    endOfChat.current.scrollIntoView({ behavior: "smooth" });
+  }, [props.MsgComponents]);
+
+  return (
+    <div id="ChatLog">
+      {props.MsgComponents}
+      <div ref={endOfChat}></div>
+    </div>
+  );
 }
