@@ -11,5 +11,4 @@ ADD ./server /server
 RUN cd /server
 WORKDIR /server
 RUN npm i
-EXPOSE 8080
 CMD [ "npm","start" ]
