@@ -1,35 +1,22 @@
-name: Deploy To Heroku
+name: Deploy to heroku.
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: client
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm i
-      - run: npm run build
-      - run: cd ../server
-      - run: npm i
-      - uses: akhileshns/heroku-deploy@v3.12.12
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build, Push and Release a Docker container to Heroku.
+        uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "reactchatforumapp"
-          heroku_email: "elaygelbart@gmail.com"
-          justlogin: true
-
-      - name: "Login to heroku registry"
-        run: heroku container:login
-
-      - name: "Build and push to heroku registry"
-        run: heroku container:push web --app reactchatforumapp
-
-      - name: "Releases the container"
-        run: heroku container:release web --app reactchatforumapp
+          email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: reactchatforumapp
+          dockerfile_directory: ./
+          dockerfile_name: Dockerfile
+          docker_options: "--no-cache"
+          process_type: web
