@@ -2,7 +2,6 @@ const sseReducer = (
   state: State.SSE,
   { payload }: { type: string; payload: State.SSE }
 ) => {
-  state = payload;
-  return state;
+  return payload;
 };
 export default sseReducer;
