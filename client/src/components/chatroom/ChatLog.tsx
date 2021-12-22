@@ -4,7 +4,7 @@ import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 import extractHNMfromISO from "../../utils/extractHNMfromISO";
 type ChatLogProps = {
-  allMsgArray: State.AllMsgInterface;
+  allMsgArray: State.MsgData[];
   MsgComponents: JSX.Element[] | [];
   setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
 };

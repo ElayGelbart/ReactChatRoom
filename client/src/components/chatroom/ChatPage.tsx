@@ -6,25 +6,27 @@ import UsersLoggedContainer from "./UsersLoggedContainer";
 import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
 import LoadingSVG from "../svg/LoadingSVG";
+// Redux
+import { useDispatch, useSelector } from "react-redux";
+import { setSSEaction } from "../../redux/slices/dataSlices";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 
 export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
   const [UserInfo, setUserInfo] = useState({ username: "" });
-  const [AllUserLoggedIn, setAllUserLoggedIn] = useState([]);
-  const [AllMsgsData, setAllMsgsData] = useState<State.AllMsgInterface>([]);
+  const AllSseData = useSelector<State.SSE, State.SSE>((state) => state);
   const [MsgComponents, setMsgComponents] = useState<JSX.Element[] | []>([]);
+  const dispatch = useDispatch();
 
   async function setSSE() {
     const sse = new EventSource("http://localhost:8080/chat/stream", {
       withCredentials: true,
     });
     sse.onmessage = (e) => {
-      const dataFromServer: { users: []; msgs: [] } = JSON.parse(e.data);
+      const dataFromServer: State.SSE = JSON.parse(e.data);
       console.log("meegssgeges", dataFromServer);
-      setAllUserLoggedIn(dataFromServer.users);
-      setAllMsgsData(dataFromServer.msgs);
+      dispatch(setSSEaction(dataFromServer));
     };
     sse.onerror = (err) => {
       sse.close();
@@ -60,12 +62,12 @@ export default function ChatPage(): JSX.Element {
       <div>
         <div id="chatContainer">
           <UsernameContext.Provider value={UserInfo}>
-            <UsersLoggedContainer allUsersArray={AllUserLoggedIn} />
+            <UsersLoggedContainer allUsersArray={AllSseData.users} />
             <SendChatContainer setMsgComponents={setMsgComponents} />
             <ChatLog
               MsgComponents={MsgComponents}
               setMsgComponents={setMsgComponents}
-              allMsgArray={AllMsgsData}
+              allMsgArray={AllSseData.msgs}
             />
           </UsernameContext.Provider>
         </div>
