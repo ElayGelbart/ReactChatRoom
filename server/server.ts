@@ -34,6 +34,7 @@ server.use("/chat", chatRouter);
 server.get("/", (req, res) => {
   res.sendFile(`${__dirname}/../client/build/index.html`);
 });
+
 server.use(ErrorHandler);
 
 export default server;
