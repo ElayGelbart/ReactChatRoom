@@ -1,23 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import UsernameLogged from "./UsernameLogged";
 import { UsernameContext } from "./ChatPage";
+import { useSelector } from "react-redux";
 
-type UsersLoggedContainerProps = {
-  allUsersArray: string[];
-};
-
-export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
+export default function UsersLoggedContainer() {
   const { username } = useContext(UsernameContext);
+  const UsersState = useSelector<State.SSE, State.UserData[]>(
+    (state) => state.users
+  );
   const [UserLoggedList, setUserLoggedList] = useState<JSX.Element[]>([
     <UsernameLogged username={username} />,
   ]);
 
   useEffect(() => {
     const UsersArrayJSX: JSX.Element[] = [];
-    if (!props.allUsersArray) {
-      return;
-    }
-    for (let user of props.allUsersArray) {
+    for (let user of UsersState) {
       if (user === username) {
         continue;
       }
@@ -25,7 +22,7 @@ export default function UsersLoggedContainer(props: UsersLoggedContainerProps) {
     }
     setUserLoggedList(UsersArrayJSX);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props]);
+  }, [UsersState]);
 
   return (
     <div id="UsersLoggedContainer">

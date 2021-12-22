@@ -7,7 +7,7 @@ import SendChatContainer from "./SendChatContainer";
 import ChatLog from "./ChatLog";
 import LoadingSVG from "../svg/LoadingSVG";
 // Redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSSEaction } from "../../redux/slices/dataSlices";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
@@ -15,8 +15,6 @@ export const UsernameContext = React.createContext({ username: "" });
 export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
   const [UserInfo, setUserInfo] = useState({ username: "" });
-  const AllSseData = useSelector<State.SSE, State.SSE>((state) => state);
-  const [MsgComponents, setMsgComponents] = useState<JSX.Element[] | []>([]);
   const dispatch = useDispatch();
 
   async function setSSE() {
@@ -55,6 +53,7 @@ export default function ChatPage(): JSX.Element {
       }
     }
     CheckAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (IsAuth === true) {
@@ -62,13 +61,9 @@ export default function ChatPage(): JSX.Element {
       <div>
         <div id="chatContainer">
           <UsernameContext.Provider value={UserInfo}>
-            <UsersLoggedContainer allUsersArray={AllSseData.users} />
-            <SendChatContainer setMsgComponents={setMsgComponents} />
-            <ChatLog
-              MsgComponents={MsgComponents}
-              setMsgComponents={setMsgComponents}
-              allMsgArray={AllSseData.msgs}
-            />
+            <UsersLoggedContainer />
+            <SendChatContainer />
+            <ChatLog />
           </UsernameContext.Provider>
         </div>
       </div>

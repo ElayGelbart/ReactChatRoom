@@ -10,9 +10,9 @@ declare namespace State {
     classOfCreator: string;
     seenIndicator: JSX.Element;
   }
-
+  type UserData = string;
   interface SSE {
     msgs: MsgData[];
-    users: string[];
+    users: UserData[];
   }
 }
