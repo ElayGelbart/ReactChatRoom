@@ -17,6 +17,3 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: reactchatforumapp
           dockerfile_directory: ./
-          dockerfile_name: Dockerfile
-          docker_options: "--no-cache"
-          process_type: web
