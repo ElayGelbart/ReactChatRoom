@@ -1,24 +1,21 @@
-import React, { useEffect, useContext, useRef } from "react";
+import React, { useEffect, useContext, useRef, useCallback } from "react";
 import OneV from "../svg/OneV";
+import ClockSVG from "../svg/Clock";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 import extractHNMfromISO from "../../utils/extractHNMfromISO";
-type ChatLogProps = {
-  allMsgArray: State.AllMsgInterface;
-  MsgComponents: JSX.Element[] | [];
-  setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
-};
+import { useSelector } from "react-redux";
 
-export default function ChatLog(props: ChatLogProps) {
+export default function ChatLog() {
   const { username } = useContext(UsernameContext);
   const endOfChat = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  const MsgState = useSelector<State.SSE, State.MsgData[]>(
+    (state) => state.msgs
+  );
+  const MsgJSXelement = useCallback(() => {
     const MsgJSX: JSX.Element[] = [];
-    if (!props.allMsgArray) {
-      return;
-    }
     const userColorArray: { username: string; colorNumber: number }[] = [];
-    for (let messeage of props.allMsgArray) {
+    for (let messeage of MsgState) {
       let colorNum: number = 10;
       const { msgAuthor, msgText, msgTime } = messeage;
       let msgTimeHour = extractHNMfromISO(msgTime);
@@ -39,31 +36,37 @@ export default function ChatLog(props: ChatLogProps) {
           userColorArray.push({ username: msgAuthor, colorNumber: colorNum });
         }
       }
+      let seenIndicatorJsx;
+      if (messeage.seenIndicator) {
+        seenIndicatorJsx = <ClockSVG />;
+      } else {
+        seenIndicatorJsx = <OneV />;
+      }
       MsgJSX.push(
         <Messeage
           msgAuthor={msgAuthor}
           msgText={msgText}
           msgTime={msgTimeHour}
           classOfCreator={`${classMsg || "otherMsg"} Msg`}
-          seenIndicator={<OneV />}
+          seenIndicatorJSX={seenIndicatorJsx}
           colorNum={colorNum}
         />
       );
     }
-    props.setMsgComponents(MsgJSX);
+    return MsgJSX;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.allMsgArray]);
+  }, [MsgState]);
 
   useEffect(() => {
     if (!endOfChat.current) {
       return;
     }
     endOfChat.current.scrollIntoView({ behavior: "smooth" });
-  }, [props.MsgComponents]);
+  }, [MsgState]);
 
   return (
     <div id="ChatLog">
-      {props.MsgComponents}
+      {MsgJSXelement()}
       <div ref={endOfChat}></div>
     </div>
   );

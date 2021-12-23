@@ -1,15 +1,11 @@
 import { useRef, useContext } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import { UsernameContext } from "./ChatPage";
-import Messeage from "./Messeage";
-import ClockSVG from "../svg/Clock";
-import extractHNMfromISO from "../../utils/extractHNMfromISO";
+import { useDispatch } from "react-redux";
+import { addNewMsgAction } from "../../redux/slices/dataSlices";
 
-interface SendChatProps {
-  setMsgComponents: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
-}
-
-export default function SendChatContainer(props: SendChatProps) {
+export default function SendChatContainer() {
+  const dispatch = useDispatch();
   const UserMsgInput = useRef<HTMLInputElement>(null);
   const { username } = useContext(UsernameContext);
 
@@ -20,20 +16,18 @@ export default function SendChatContainer(props: SendChatProps) {
       }
       const UserMsgInputValue = UserMsgInput.current.value;
       const JWToken = document.cookie.split("=")[1];
-      props.setMsgComponents((prevState) => {
-        const ISOtimeNOW = new Date().toISOString().toString();
-        return [
-          ...prevState,
-          <Messeage
-            msgAuthor={username}
-            msgText={UserMsgInputValue}
-            msgTime={extractHNMfromISO(ISOtimeNOW)}
-            classOfCreator="myMsg Msg"
-            seenIndicator={<ClockSVG />}
-            colorNum={10}
-          />,
-        ];
-      });
+      const ISOtimeNOW = new Date().toISOString().toString();
+
+      dispatch(
+        addNewMsgAction({
+          msgAuthor: username,
+          msgText: UserMsgInputValue,
+          msgTime: ISOtimeNOW,
+          classOfCreator: "myMsg Msg",
+          seenIndicator: true,
+        })
+      );
+
       await fetch("/chat/new/msg", {
         method: "POST",
         headers: {

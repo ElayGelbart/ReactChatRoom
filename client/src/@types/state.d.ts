@@ -8,7 +8,12 @@ declare namespace State {
     msgText: string;
     msgTime: string;
     classOfCreator: string;
-    seenIndicator: JSX.Element;
+    seenIndicator?: boolean;
   }
-  type AllMsgInterface = MsgData[];
+  type UserData = string;
+
+  interface SSE {
+    msgs: MsgData[];
+    users: UserData[];
+  }
 }
