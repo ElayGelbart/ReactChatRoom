@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useRef, useCallback } from "react";
 import OneV from "../svg/OneV";
+import ClockSVG from "../svg/Clock";
 import Messeage from "./Messeage";
 import { UsernameContext } from "./ChatPage";
 import extractHNMfromISO from "../../utils/extractHNMfromISO";
@@ -35,13 +36,19 @@ export default function ChatLog() {
           userColorArray.push({ username: msgAuthor, colorNumber: colorNum });
         }
       }
+      let seenIndicatorJsx;
+      if (messeage.seenIndicator) {
+        seenIndicatorJsx = <ClockSVG />;
+      } else {
+        seenIndicatorJsx = <OneV />;
+      }
       MsgJSX.push(
         <Messeage
           msgAuthor={msgAuthor}
           msgText={msgText}
           msgTime={msgTimeHour}
           classOfCreator={`${classMsg || "otherMsg"} Msg`}
-          seenIndicator={<OneV />}
+          seenIndicatorJSX={seenIndicatorJsx}
           colorNum={colorNum}
         />
       );

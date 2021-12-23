@@ -5,7 +5,7 @@ type MesseageProps = {
   msgText: string;
   msgTime: string;
   classOfCreator: string;
-  seenIndicator: JSX.Element;
+  seenIndicatorJSX: JSX.Element;
   colorNum: number;
 };
 
@@ -30,7 +30,7 @@ export default function Messeage(props: MesseageProps) {
       <p className="MsgText">{props.msgText}</p>
       <p className="MsgTime">
         {props.msgTime}
-        {props.seenIndicator}
+        {props.seenIndicatorJSX}
       </p>
     </div>
   );
