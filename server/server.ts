@@ -31,9 +31,10 @@ server.use(express.urlencoded({ extended: false }));
 server.use(express.static(`${__dirname}/../client/build`));
 server.use("/user", userRouter);
 server.use("/chat", chatRouter);
-server.get("/", (req, res) => {
+server.get("/", (_req, res) => {
   res.sendFile(`${__dirname}/../client/build/index.html`);
 });
+
 server.use(ErrorHandler);
 
 export default server;
