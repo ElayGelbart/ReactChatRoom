@@ -3,7 +3,7 @@ const { execSync } = require("child_process")
 
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
-    execSync(`cat ~/.netrc
+    execSync(`cat >~/.netrc
     machine api.heroku.com
       login _
       password ${HerokuApiKey}
