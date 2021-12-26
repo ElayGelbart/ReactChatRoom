@@ -1738,7 +1738,7 @@ try {
     process.env.HEROKU_API_KEY = HerokuApiKey
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
-    if (core.getInput(deploymentWithGit)) {
+    if (core.getInput('deploymentWithGit')) {
       gitDeploymentFn(AppName)
     } else {
       dockerDeploymentFn(AppName)
