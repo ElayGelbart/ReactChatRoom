@@ -3,10 +3,10 @@ const { execSync } = require("child_process")
 
 try {
   async function blah() {
+    const HerokuApiKey = core.getInput('herokuApiKey')
+    process.env.HEROKU_API_KEY = HerokuApiKey
     const AppName = core.getInput('herokuAppName');
     console.log(`AppName ${AppName}!`);
-    const HerokuApiKey = core.getInput('herokuApiKey')
-    console.log(`AppName ${HerokuApiKey}!`);
     core.startGroup()
     const login = execSync("heroku container:login")
     console.log(login)
