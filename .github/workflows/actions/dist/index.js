@@ -1695,16 +1695,13 @@ try {
     console.log(`AppName ${HerokuApiKey}!`);
     core.startGroup()
     const login = execSync("heroku container:login")
-    await login()
     console.log(login)
     core.endGroup()
     core.startGroup()
     const push = execSync(`heroku container:push web -a ${AppName}`)
-    await push()
     core.endGroup()
     core.startGroup()
     const release = execSync(`heroku container:release web -a ${AppName}`)
-    await release()
     core.endGroup()
   }
   blah()
