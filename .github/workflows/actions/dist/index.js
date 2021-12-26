@@ -1586,7 +1586,6 @@ const { execSync } = __nccwpck_require__(81)
 
 const gitDeploymentFn = (AppName) => {
   try {
-    console.log(process.env.HEROKU_API_KEY)
     execSync(`cat >~/.netrc <<EOF
     machine api.heroku.com
         login elaygelbart@gmail.com
@@ -1598,7 +1597,7 @@ const gitDeploymentFn = (AppName) => {
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
-    execSync(`git push heroku ${head}main`)
+    execSync(`git push heroku ${head}refs/heads/main`)
     console.log("pushed successfully")
   } catch (error) {
     core.setFailed(error)
