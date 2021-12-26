@@ -5,10 +5,10 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
     execSync(`cat >~/.netrc <<EOF
     machine api.heroku.com
-      login _
+      login elaygelbart@gmail.com
       password ${HerokuApiKey}
     machine git.heroku.com
-      login _
+      login elaygelbart@gmail.com
       password ${HerokuApiKey}
       EOF`)
     const head = core.getInput('branch') + ":"
