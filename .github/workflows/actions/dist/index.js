@@ -8461,6 +8461,8 @@ try {
     const HerokuApiKey = core.getInput('herokuApiKey')
     console.log(`AppName ${HerokuApiKey}!`);
     await execSync("heroku container:login")
+    await execSync(`heroku container:push web -a ${AppName}`)
+    await execSync(`heroku container:release web -a ${AppName}`)
   }
   blah()
 } catch (error) {
