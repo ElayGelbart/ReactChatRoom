@@ -3,4 +3,5 @@ const dockerDeploymentFn = (AppName) => {
   const push = execSync(`heroku container:push web -a ${AppName}`)
   const release = execSync(`heroku container:release web -a ${AppName}`)
 }
-exports.default = dockerDeploymentFn
+
+module.exports = dockerDeploymentFn
