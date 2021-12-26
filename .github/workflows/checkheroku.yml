@@ -1,0 +1,20 @@
+name: Publish To Heorku
+on:
+  push:
+    branches: [herokuaction]
+
+env:
+  HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME}}
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY}}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Dir
+        uses: actions/checkout@v2
+      - name: Heroku Deployment
+        uses: ./actions/
+        with:
+        herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
+        herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
