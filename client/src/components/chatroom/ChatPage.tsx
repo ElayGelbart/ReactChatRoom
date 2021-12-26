@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 //Style
 import "./chatroom.css";
 // My Components
@@ -9,10 +10,6 @@ import LoadingSVG from "../svg/LoadingSVG";
 // Redux
 import { useDispatch } from "react-redux";
 import { setSSEaction } from "../../redux/slices/dataSlices";
-import {
-  EventStreamContentType,
-  fetchEventSource,
-} from "@microsoft/fetch-event-source";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 
@@ -31,16 +28,18 @@ export default function ChatPage(): JSX.Element {
         Accept: "text/event-stream",
       },
       async onopen(response) {
-        console.log(EventStreamContentType, "response EventSource");
-        return;
+        if (response.ok) {
+          return;
+        }
+        throw response;
       },
       onmessage(e) {
         console.log(e, "e msg");
         const dataFromServer: State.SSE = JSON.parse(e.data);
-        console.log("meegssgeges", dataFromServer);
         dispatch(setSSEaction(dataFromServer));
       },
       onerror(err) {
+        console.log("in error");
         throw err;
       },
       onclose() {
