@@ -7,9 +7,19 @@ try {
     console.log(`AppName ${AppName}!`);
     const HerokuApiKey = core.getInput('herokuApiKey')
     console.log(`AppName ${HerokuApiKey}!`);
-    execSync("heroku container:login")
-    execSync(`heroku container:push web -a ${AppName}`)
-    execSync(`heroku container:release web -a ${AppName}`)
+    core.startGroup()
+    const login = execSync("heroku container:login")
+    await login()
+    console.log(login)
+    core.endGroup()
+    core.startGroup()
+    const push = execSync(`heroku container:push web -a ${AppName}`)
+    await push()
+    core.endGroup()
+    core.startGroup()
+    const release = execSync(`heroku container:release web -a ${AppName}`)
+    await release()
+    core.endGroup()
   }
   blah()
 } catch (error) {
