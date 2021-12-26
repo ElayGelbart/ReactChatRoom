@@ -8289,6 +8289,14 @@ module.exports = require("assert");
 
 /***/ }),
 
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
+
+/***/ }),
+
 /***/ 2361:
 /***/ ((module) => {
 
@@ -8444,13 +8452,17 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(5555);
 const github = __nccwpck_require__(2062);
+const { exec, spawn, execSync } = __nccwpck_require__(2081)
 
 try {
-  const AppName = core.getInput('herokuAppName');
-  console.log(`AppName ${AppName}!`);
-  const HerokuApiKey = core.getInput('herokuApiKey')
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  async function blah() {
+    const AppName = core.getInput('herokuAppName');
+    console.log(`AppName ${AppName}!`);
+    const HerokuApiKey = core.getInput('herokuApiKey')
+    console.log(`AppName ${HerokuApiKey}!`);
+    await execSync("heroku login:container")
+  }
+  blah()
 } catch (error) {
   core.setFailed(error.message);
 }
