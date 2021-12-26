@@ -1594,6 +1594,7 @@ const gitDeploymentFn = (AppName) => {
         login elaygelbart@gmail.com
         password ${process.env.HEROKU_API_KEY}
     EOF`)
+    execSync("heroku login")
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
