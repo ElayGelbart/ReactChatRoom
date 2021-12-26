@@ -14,7 +14,7 @@ jobs:
       - name: Checkout Dir
         uses: actions/checkout@v2
       - name: Heroku Deployment
-        uses: ./actions/
+        uses: ./.github/workflows/actions/
         with:
           herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
           herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
