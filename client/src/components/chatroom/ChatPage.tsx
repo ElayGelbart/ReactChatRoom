@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 //Style
 import "./chatroom.css";
 // My Components
@@ -18,17 +19,33 @@ export default function ChatPage(): JSX.Element {
   const dispatch = useDispatch();
 
   async function setSSE() {
-    const sse = new EventSource("http://localhost:8080/chat/stream", {
-      withCredentials: true,
+    const JWToken = document.cookie.split("=")[1];
+    console.log(JWToken, "the token");
+
+    fetchEventSource(`/chat/stream`, {
+      headers: {
+        authorization: `Bearer ${JWToken}`,
+        Accept: "text/event-stream",
+      },
+      async onopen(response) {
+        if (response.ok) {
+          return;
+        }
+        throw response;
+      },
+      onmessage(e) {
+        console.log(e, "e msg");
+        const dataFromServer: State.SSE = JSON.parse(e.data);
+        dispatch(setSSEaction(dataFromServer));
+      },
+      onerror(err) {
+        console.log("in error");
+        throw err;
+      },
+      onclose() {
+        console.log("in close");
+      },
     });
-    sse.onmessage = (e) => {
-      const dataFromServer: State.SSE = JSON.parse(e.data);
-      console.log("meegssgeges", dataFromServer);
-      dispatch(setSSEaction(dataFromServer));
-    };
-    sse.onerror = (err) => {
-      sse.close();
-    };
   }
 
   useEffect(() => {
@@ -37,7 +54,10 @@ export default function ChatPage(): JSX.Element {
         const JWToken = document.cookie.split("=")[1];
         const response = await fetch("/user/auth", {
           method: "POST",
-          headers: { authorization: `Bearer ${JWToken}` },
+          headers: {
+            authorization: `Bearer ${JWToken}`,
+            Accept: "text/event-stream; charset=utf-8",
+          },
         }).then((res) => {
           if (!res.ok) {
             throw res;
@@ -46,7 +66,7 @@ export default function ChatPage(): JSX.Element {
         });
         const cookieUsernameObj = await response.json();
         setUserInfo(cookieUsernameObj);
-        await setSSE();
+        setSSE();
         setIsAuth(true);
       } catch (err) {
         setIsAuth(false);

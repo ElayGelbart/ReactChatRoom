@@ -1,0 +1,22 @@
+name: Publish To Heorku
+on:
+  push:
+    branches: [main]
+
+env:
+  MONGO_URI: ${{ secrets.MONGO_URI}}
+  MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI}}
+  HASHPASS_KEY: ${{ secrets.HASHPASS_KEY}}
+  JWT_SALT: ${{ secrets.JWT_SALT}}
+  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY}}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Dir
+        uses: actions/checkout@v2
+      - name: Heroku Deployment
+        run: heroku container:login
+        run: heroku container:push web
+        run: heroku container:release web -a reactchatforumapp

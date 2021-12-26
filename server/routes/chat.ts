@@ -13,8 +13,6 @@ chatRouter.get("/stream", async (req, res, next): Promise<void> => {
     "Content-Type": "text/event-stream",
     Connection: "keep-alive",
     "Cache-Control": "no-cache",
-    "Access-Control-Allow-Origin": "http://localhost:3000", // change this in prod
-    "Access-Control-Allow-Credentials": "true",
   });
   // Security check
   try {
