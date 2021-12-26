@@ -1,6 +1,6 @@
-name: "Heroku Docker Web App Deployment"
+name: "Heroku Deployment"
 author: "Elay Gelbart"
-description: "Heroku Docker Web App Deployment"
+description: "Heroku Deployment"
 inputs:
   herokuAppName:
     description: "Name of the heroku application to which the build is to be sent."
@@ -8,6 +8,14 @@ inputs:
   herokuApiKey:
     description: "Heroku API key"
     required: true
+  deploymentWithGit:
+    description: "Selected branch to deployment"
+    default: "false"
+    required: false
+  branch:
+    description: "Selected branch to deployment"
+    default: "HEAD"
+    required: false
 runs:
   using: "node12"
   main: "dist/index.js"
