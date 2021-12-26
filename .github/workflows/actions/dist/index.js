@@ -1556,15 +1556,47 @@ exports.debug = debug; // for test
 /***/ }),
 
 /***/ 770:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(555);
+const { execSync } = __nccwpck_require__(81)
 
 const dockerDeploymentFn = (AppName) => {
-  const login = execSync("heroku container:login")
-  const push = execSync(`heroku container:push web -a ${AppName}`)
-  const release = execSync(`heroku container:release web -a ${AppName}`)
+  try {
+    execSync("heroku container:login")
+    console.log("logged the container")
+    execSync(`heroku container:push web -a ${AppName}`)
+    console.log("pushed container successfully")
+    execSync(`heroku container:release web -a ${AppName}`)
+    console.log("App Realesed To Heroku!")
+  } catch (error) {
+    core.setFailed(error)
+  }
 }
 
 module.exports = dockerDeploymentFn
+
+/***/ }),
+
+/***/ 477:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(555);
+const { execSync } = __nccwpck_require__(81)
+
+const gitDeploymentFn = (AppName) => {
+  try {
+    const head = cors.getInput('branch') + ":"
+    execSync(`heroku git:remote -a ${AppName}`)
+    console.log("set git remote")
+    execSync(`git push heroku ${head}main`)
+    console.log("pushed successfully")
+  } catch (error) {
+    core.setFailed(error)
+  }
+}
+
+module.exports = gitDeploymentFn
 
 /***/ }),
 
@@ -1698,19 +1730,23 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(555);
-const { execSync } = __nccwpck_require__(81)
 const dockerDeploymentFn = __nccwpck_require__(770)
+const gitDeploymentFn = __nccwpck_require__(477)
 try {
   (async function () {
-    const HerokuApiKey = core.getInput('herokuApiKey')
+    const HerokuApiKey = core.getInput('herokuApiKey');
     process.env.HEROKU_API_KEY = HerokuApiKey
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
-    dockerDeploymentFn(AppName)
+    if (core.getInput(deploymentWithGit)) {
+      gitDeploymentFn(AppName)
+    } else {
+      dockerDeploymentFn(AppName)
+    }
   }
   )()
 } catch (error) {
-  core.setFailed(error.message);
+  core.setFailed(error);
 }
 })();
 
