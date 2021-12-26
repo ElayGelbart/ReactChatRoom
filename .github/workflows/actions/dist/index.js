@@ -8460,7 +8460,7 @@ try {
     console.log(`AppName ${AppName}!`);
     const HerokuApiKey = core.getInput('herokuApiKey')
     console.log(`AppName ${HerokuApiKey}!`);
-    await execSync("heroku login:container")
+    await execSync("heroku container:login")
   }
   blah()
 } catch (error) {
