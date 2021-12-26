@@ -1586,7 +1586,7 @@ const { execSync } = __nccwpck_require__(81)
 
 const gitDeploymentFn = (AppName) => {
   try {
-    const head = cors.getInput('branch') + ":"
+    const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
     execSync(`git push heroku ${head}main`)
