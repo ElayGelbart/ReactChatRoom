@@ -6,6 +6,7 @@ try {
   const AppName = core.getInput('herokuAppName');
   console.log(`AppName ${AppName}!`);
   const HerokuApiKey = core.getInput('herokuApiKey')
+  console.log(`AppName ${HerokuApiKey}!`);
   exec("heroku login:container")
 } catch (error) {
   core.setFailed(error.message);
