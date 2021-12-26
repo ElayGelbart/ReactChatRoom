@@ -16,5 +16,5 @@ jobs:
       - name: Heroku Deployment
         uses: ./actions/
         with:
-        herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
-        herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
+          herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
+          herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
