@@ -8,7 +8,7 @@ try {
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
     if (core.getInput('deploymentWithGit')) {
-      gitDeploymentFn(AppName)
+      gitDeploymentFn(AppName, HerokuApiKey)
     } else {
       dockerDeploymentFn(AppName)
     }

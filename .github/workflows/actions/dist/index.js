@@ -1584,9 +1584,15 @@ module.exports = dockerDeploymentFn
 const core = __nccwpck_require__(555);
 const { execSync } = __nccwpck_require__(81)
 
-const gitDeploymentFn = (AppName) => {
+const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
-    execSync("heroku container:login")
+    execSync(`cat ~/.netrc
+    machine api.heroku.com
+      login _
+      password ${HerokuApiKey}
+    machine git.heroku.com
+      login _
+      password ${HerokuApiKey}`)
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
@@ -1740,7 +1746,7 @@ try {
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
     if (core.getInput('deploymentWithGit')) {
-      gitDeploymentFn(AppName)
+      gitDeploymentFn(AppName, HerokuApiKey)
     } else {
       dockerDeploymentFn(AppName)
     }
