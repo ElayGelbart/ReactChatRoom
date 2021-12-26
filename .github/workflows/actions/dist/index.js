@@ -1586,7 +1586,7 @@ const { execSync } = __nccwpck_require__(81)
 
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
-    execSync(`cat >~/.netrc
+    execSync(`cat ~/.netrc
     machine api.heroku.com
       login _
       password ${HerokuApiKey}
