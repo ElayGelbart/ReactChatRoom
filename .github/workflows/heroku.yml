@@ -19,6 +19,6 @@ jobs:
       - name: Heroku Deployment
         run: heroku container:login
       - name: Heroku push to registry
-        run: heroku container:push web
+        run: heroku container:push web -a reactchatforumapp
       - name: heroku release
         run: heroku container:release web -a reactchatforumapp
