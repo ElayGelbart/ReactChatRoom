@@ -1588,10 +1588,10 @@ const gitDeploymentFn = (AppName) => {
   try {
     execSync(`cat >~/.netrc <<EOF
     machine api.heroku.com
-        login 
+        login _
         password ${process.env.HEROKU_API_KEY}
     machine git.heroku.com
-        login 
+        login _
         password ${process.env.HEROKU_API_KEY}
     EOF`)
     const head = core.getInput('branch') + ":"
