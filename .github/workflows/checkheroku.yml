@@ -3,9 +3,6 @@ on:
   push:
     branches: [herokuaction]
 
-env:
-  HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME}}
-
 jobs:
   build:
     runs-on: ubuntu-latest
