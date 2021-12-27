@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const { execSync } = require("child_process")
+const { execSync, exec } = require("child_process")
 
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
@@ -14,8 +14,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
-    // execSync("heroku stack:set heroku-20")
-    // console.log("set stack to git")
+    execSync("git fetch --all --unshallow")
     execSync(`git push heroku ${head}refs/heads/main -f`)
     console.log("pushed successfully")
   } catch (error) {
