@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "heroku-prebuild": "cd client && npm install && npm run build && cd .. && cd server && npm install",
-    "start": "ts-node ./server/index.ts"
+    "heroku-prebuild": "npm install --prefix ./client && npm run build --prefix ./client && cd ./server/ && npm install",
+    "start": "npm start --prefix ./server"
   }
 }
