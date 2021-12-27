@@ -1598,7 +1598,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
     if (head !== "main") {
-      execSync(`git checkout ${head}`)
+      execSync(`git checkout herokuaction`)
     }
     execSync(`git push heroku ${head}refs/heads/main -f`)
     console.log("pushed successfully")
