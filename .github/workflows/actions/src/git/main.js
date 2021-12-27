@@ -14,10 +14,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
-    if (head !== "main") {
-      execSync(`git checkout herokuaction`)
-    }
-    execSync(`git push heroku ${head}refs/heads/main -f`)
+    execSync(`git push heroku herokuacrion:refs/heads/main -f`)
     console.log("pushed successfully")
   } catch (error) {
     core.setFailed(error)
