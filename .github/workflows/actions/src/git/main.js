@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const { execSync, exec } = require("child_process")
-
+const { checkShallow } = require("./utlis")
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
     execSync(`cat >~/.netrc <<EOF
@@ -14,7 +14,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
-    execSync("git fetch --prune --unshallow")
+    checkShallow();
     execSync(`git push heroku ${head}refs/heads/main -f`)
     console.log("pushed successfully")
   } catch (error) {

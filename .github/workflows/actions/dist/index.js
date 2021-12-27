@@ -1583,7 +1583,7 @@ module.exports = dockerDeploymentFn
 
 const core = __nccwpck_require__(555);
 const { execSync, exec } = __nccwpck_require__(81)
-
+const { checkShallow } = __nccwpck_require__(502)
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
     execSync(`cat >~/.netrc <<EOF
@@ -1597,7 +1597,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote")
-    execSync("git fetch --prune --unshallow")
+    checkShallow();
     execSync(`git push heroku ${head}refs/heads/main -f`)
     console.log("pushed successfully")
   } catch (error) {
@@ -1606,6 +1606,22 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
 }
 
 module.exports = gitDeploymentFn
+
+/***/ }),
+
+/***/ 502:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const { execSync } = __nccwpck_require__(81)
+const checkShallow = () => {
+  const isShallow = execSync("git rev-parse --is-shallow-repository").toString();
+
+  if (isShallow.match(/true/)) {
+    execSync("git fetch --prune --unshallow")
+    console.log("git unshallow repository")
+  }
+}
+module.exports.checkShallow = checkShallow
 
 /***/ }),
 
