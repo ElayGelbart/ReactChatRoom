@@ -1564,13 +1564,15 @@ const { execSync } = __nccwpck_require__(81)
 const dockerDeploymentFn = (AppName) => {
   try {
     execSync("heroku container:login")
-    console.log("logged the container")
+    console.log("logged the container✅")
     execSync(`heroku container:push web -a ${AppName}`)
-    console.log("pushed container successfully")
+    console.log("pushed container successfully✅✅✅")
     execSync(`heroku container:release web -a ${AppName}`)
-    console.log("App Realesed To Heroku!")
+    console.log("App Realesed To Heroku!💥🐋🐋🐋💥 ")
   } catch (error) {
     core.setFailed(error)
+    console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
+    return
   }
 }
 
@@ -1588,20 +1590,21 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
     execSync(`cat >~/.netrc <<EOF
     machine api.heroku.com
-      login elaygelbart@gmail.com
+      login _
       password ${HerokuApiKey}
     machine git.heroku.com
-      login elaygelbart@gmail.com
+      login _
       password ${HerokuApiKey}
       EOF`)
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
-    console.log("set git remote")
+    console.log("set git remote✅")
     checkShallow();
     execSync(`git push heroku ${head}refs/heads/main -f`)
-    console.log("pushed successfully")
+    console.log("pushed successfully to heroku🔥💥😀")
   } catch (error) {
     core.setFailed(error)
+    return
   }
 }
 
@@ -1618,7 +1621,7 @@ const checkShallow = () => {
 
   if (isShallow.match(/true/)) {
     execSync("git fetch --prune --unshallow")
-    console.log("git unshallow repository")
+    console.log("git unshallow repository🔄")
   }
 }
 module.exports.checkShallow = checkShallow
@@ -1755,18 +1758,18 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 const core = __nccwpck_require__(555);
-const dockerDeploymentFn = __nccwpck_require__(770)
-const gitDeploymentFn = __nccwpck_require__(477)
+const dockerDeployment = __nccwpck_require__(770)
+const gitDeployment = __nccwpck_require__(477)
 try {
   (async function () {
     const HerokuApiKey = core.getInput('herokuApiKey');
     process.env.HEROKU_API_KEY = HerokuApiKey
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
-    if (core.getInput('deploymentWithGit')) {
-      gitDeploymentFn(AppName, HerokuApiKey)
+    if (core.getInput('useDocker')) {
+      dockerDeployment(AppName)
     } else {
-      dockerDeploymentFn(AppName)
+      gitDeployment(AppName, HerokuApiKey)
     }
   }
   )()
