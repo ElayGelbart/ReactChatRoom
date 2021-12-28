@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: Checkout Dir
         uses: actions/checkout@v2
-      - name: Heroku Deployment
         #My Focking Action In Marketplace
+      - name: Heroku Deployment
         uses: ElayGelbart/Heroku-Auto-Deployment@v1.0.1
         with:
           herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
