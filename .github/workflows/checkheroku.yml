@@ -10,9 +10,9 @@ jobs:
       - name: Checkout Dir
         uses: actions/checkout@v2
       - name: Heroku Deployment
-        uses: ./.github/workflows/actions/
+        #My Focking Action In Marketplace
+        uses: ElayGelbart/Heroku-Auto-Deployment@v1.0.1
         with:
           herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
           herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
           useDocker: true
-          dir: server
