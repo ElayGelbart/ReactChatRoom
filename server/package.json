@@ -4,6 +4,7 @@
   "description": "Chat Room",
   "main": "index.js",
   "scripts": {
+    "build": "npm run build --prefix ../client/",
     "test": "cross-env NODE_ENV=TEST jest --forceExit --verbose ./tests",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts"
