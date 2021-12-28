@@ -1565,10 +1565,11 @@ const dockerDeploymentFn = (AppName) => {
   try {
     execSync("heroku container:login")
     console.log("✅ logged the container ✅")
-    execSync(`heroku container:push web -a ${AppName}`)
+    const appDir = core.getInput("dir");
+    execSync(`heroku container:push web -a ${AppName}`, appDir ? { cwd: appDir } : null)
     console.log("✅✅✅ pushed container successfully ✅✅✅")
-    execSync(`heroku container:release web -a ${AppName}`)
-    console.log("💥🐋🐋🐋💥 App Realesed To Heroku! 💥🐋🐋🐋💥 ")
+    execSync(`heroku container:release web -a ${AppName}`, appDir ? { cwd: appDir } : null)
+    console.log("💥🐋🐋🐋💥 App Released To Heroku! 💥🐋🐋🐋💥 ")
   } catch (error) {
     core.setFailed(error)
     console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
@@ -1585,7 +1586,7 @@ module.exports = dockerDeploymentFn
 
 const core = __nccwpck_require__(555);
 const { execSync } = __nccwpck_require__(81)
-const { checkShallow } = __nccwpck_require__(502)
+const { checkShallow } = __nccwpck_require__(112)
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
     execSync(`cat >~/.netrc <<EOF
@@ -1603,7 +1604,11 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     execSync("heroku stack:set heroku-20")
     execSync("heroku plugins:install heroku-repo");
     execSync(`heroku repo:reset -a ${AppName}`);
-    execSync(`git push heroku \`git subtree split --prefix server ${head}\`:refs/heads/main --force`,)
+    if (appDir) {
+      execSync(`git push heroku \`git subtree split --prefix ${appDir} ${head}\`:refs/heads/main --force`,)
+    } else {
+      execSync(`git push heroku ${head}:refs/heads/main -f`)
+    }
     console.log("🔥💥😀 pushed successfully to heroku 🔥💥😀")
   } catch (error) {
     core.setFailed(error)
@@ -1616,7 +1621,7 @@ module.exports = gitDeploymentFn
 
 /***/ }),
 
-/***/ 502:
+/***/ 112:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const { execSync } = __nccwpck_require__(81)

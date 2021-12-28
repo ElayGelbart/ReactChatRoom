@@ -5,10 +5,11 @@ const dockerDeploymentFn = (AppName) => {
   try {
     execSync("heroku container:login")
     console.log("✅ logged the container ✅")
-    execSync(`heroku container:push web -a ${AppName}`)
+    const appDir = core.getInput("dir");
+    execSync(`heroku container:push web -a ${AppName}`, appDir ? { cwd: appDir } : null)
     console.log("✅✅✅ pushed container successfully ✅✅✅")
-    execSync(`heroku container:release web -a ${AppName}`)
-    console.log("💥🐋🐋🐋💥 App Realesed To Heroku! 💥🐋🐋🐋💥 ")
+    execSync(`heroku container:release web -a ${AppName}`, appDir ? { cwd: appDir } : null)
+    console.log("💥🐋🐋🐋💥 App Released To Heroku! 💥🐋🐋🐋💥 ")
   } catch (error) {
     core.setFailed(error)
     console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
