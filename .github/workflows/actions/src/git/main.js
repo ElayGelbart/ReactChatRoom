@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const { execSync, exec } = require("child_process")
+const { execSync } = require("child_process")
 const { checkShallow } = require("./utlis")
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
@@ -13,10 +13,10 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
       EOF`)
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
-    console.log("set git remote✅")
+    console.log("✅ set git remote ✅")
     checkShallow();
     execSync(`git push heroku ${head}refs/heads/main -f`)
-    console.log("pushed successfully to heroku🔥💥😀")
+    console.log("🔥💥😀 pushed successfully to heroku 🔥💥😀")
   } catch (error) {
     core.setFailed(error)
     console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)

@@ -1564,11 +1564,11 @@ const { execSync } = __nccwpck_require__(81)
 const dockerDeploymentFn = (AppName) => {
   try {
     execSync("heroku container:login")
-    console.log("logged the container✅")
+    console.log("✅ logged the container ✅")
     execSync(`heroku container:push web -a ${AppName}`)
-    console.log("pushed container successfully✅✅✅")
+    console.log("✅✅✅ pushed container successfully ✅✅✅")
     execSync(`heroku container:release web -a ${AppName}`)
-    console.log("App Realesed To Heroku!💥🐋🐋🐋💥 ")
+    console.log("💥🐋🐋🐋💥 App Realesed To Heroku! 💥🐋🐋🐋💥 ")
   } catch (error) {
     core.setFailed(error)
     console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
@@ -1584,7 +1584,7 @@ module.exports = dockerDeploymentFn
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(555);
-const { execSync, exec } = __nccwpck_require__(81)
+const { execSync } = __nccwpck_require__(81)
 const { checkShallow } = __nccwpck_require__(502)
 const gitDeploymentFn = (AppName, HerokuApiKey) => {
   try {
@@ -1598,10 +1598,10 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
       EOF`)
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
-    console.log("set git remote✅")
+    console.log("✅ set git remote ✅")
     checkShallow();
     execSync(`git push heroku ${head}refs/heads/main -f`)
-    console.log("pushed successfully to heroku🔥💥😀")
+    console.log("🔥💥😀 pushed successfully to heroku 🔥💥😀")
   } catch (error) {
     core.setFailed(error)
     console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
@@ -1761,6 +1761,7 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(555);
 const dockerDeployment = __nccwpck_require__(770)
 const gitDeployment = __nccwpck_require__(477)
+
 try {
   (async function () {
     const HerokuApiKey = core.getInput('herokuApiKey');
@@ -1768,8 +1769,10 @@ try {
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
     if (core.getInput('useDocker')) {
+      console.log("🐋 deplotment with Docker 🐋")
       dockerDeployment(AppName)
     } else {
+      console.log("🐈 deplotment with Git 🐈")
       gitDeployment(AppName, HerokuApiKey)
     }
   }
