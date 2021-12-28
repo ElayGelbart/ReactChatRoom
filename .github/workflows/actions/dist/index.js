@@ -1596,6 +1596,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
       login _
       password ${HerokuApiKey}
       EOF`)
+    execSync("heroku stack:set heroku-20")
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote✅")
