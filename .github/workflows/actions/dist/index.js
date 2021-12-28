@@ -1596,7 +1596,6 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
       login _
       password ${HerokuApiKey}
       EOF`)
-    execSync("heroku stack:set heroku-20")
     const head = core.getInput('branch') + ":"
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("set git remote✅")
@@ -1605,6 +1604,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     console.log("pushed successfully to heroku🔥💥😀")
   } catch (error) {
     core.setFailed(error)
+    console.log(`🛑❌deployment failed: ${error.messeage}❌🛑`)
     return
   }
 }
