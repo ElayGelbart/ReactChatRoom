@@ -8,9 +8,9 @@ inputs:
   herokuApiKey:
     description: "Heroku API key"
     required: true
-  deploymentWithGit:
+  useDocker:
     description: "Selected branch to deployment"
-    default: "false"
+    default: ""
     required: false
   branch:
     description: "Selected branch to deployment"

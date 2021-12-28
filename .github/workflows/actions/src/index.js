@@ -1,16 +1,16 @@
 const core = require('@actions/core');
-const dockerDeploymentFn = require("./docker/main")
-const gitDeploymentFn = require("./git/main")
+const dockerDeployment = require("./docker/main")
+const gitDeployment = require("./git/main")
 try {
   (async function () {
     const HerokuApiKey = core.getInput('herokuApiKey');
     process.env.HEROKU_API_KEY = HerokuApiKey
     const AppName = core.getInput('herokuAppName');
     console.log(`Application Name: ${AppName}`);
-    if (core.getInput('deploymentWithGit')) {
-      gitDeploymentFn(AppName, HerokuApiKey)
+    if (core.getInput('useDocker')) {
+      dockerDeployment(AppName)
     } else {
-      dockerDeploymentFn(AppName)
+      gitDeployment(AppName, HerokuApiKey)
     }
   }
   )()

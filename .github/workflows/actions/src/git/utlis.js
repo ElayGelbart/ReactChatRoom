@@ -4,7 +4,7 @@ const checkShallow = () => {
 
   if (isShallow.match(/true/)) {
     execSync("git fetch --prune --unshallow")
-    console.log("git unshallow repository")
+    console.log("git unshallow repository🔄")
   }
 }
 module.exports.checkShallow = checkShallow
