@@ -1600,7 +1600,7 @@ const gitDeploymentFn = (AppName, HerokuApiKey) => {
     execSync(`heroku git:remote -a ${AppName}`)
     console.log("✅ set git remote ✅")
     checkShallow();
-    execSync(`git push -f heroku \`git subtree split --prefix=server\`:refs/heads/main`,)
+    execSync(`git push -f heroku \`git subtree split --prefix=server\`:refs/heads/main -f`,)
     console.log("🔥💥😀 pushed successfully to heroku 🔥💥😀")
   } catch (error) {
     core.setFailed(error)
