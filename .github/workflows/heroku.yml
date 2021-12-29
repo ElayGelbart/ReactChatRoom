@@ -3,22 +3,15 @@ on:
   push:
     branches: [main]
 
-env:
-  MONGO_URI: ${{ secrets.MONGO_URI}}
-  MONGO_TEST_URI: ${{ secrets.MONGO_TEST_URI}}
-  HASHPASS_KEY: ${{ secrets.HASHPASS_KEY}}
-  JWT_SALT: ${{ secrets.JWT_SALT}}
-  HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY}}
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Dir
         uses: actions/checkout@v2
-      - name: Heroku Deployment
-        run: heroku container:login
-      - name: Heroku push to registry
-        run: heroku container:push web -a reactchatforumapp
-      - name: heroku release
-        run: heroku container:release web -a reactchatforumapp
+      - name: My Heroku Deployment
+        uses: ElayGelbart/Heroku-Auto-Deployment@v1.0.6
+        with:
+          herokuApiKey: ${{ secrets.HEROKU_API_KEY}}
+          herokuAppName: ${{ secrets.HEROKU_APP_NAME}}
+          useDocker: true
