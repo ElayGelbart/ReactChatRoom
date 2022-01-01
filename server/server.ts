@@ -3,7 +3,6 @@ import cors from "cors";
 import mongodb, { MongoClient } from "mongodb";
 import ErrorHandler from "./middleware/error/generalErrorHandler";
 import userRouter from "./routes/user";
-import chatRouter from "./routes/chat";
 require("dotenv").config();
 console.log(process.env.NODE_ENV, "nodeenv");
 
@@ -30,7 +29,6 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(express.static(`${__dirname}/../client/build`));
 server.use("/user", userRouter);
-server.use("/chat", chatRouter);
 server.get("/", (_req, res) => {
   res.sendFile(`${__dirname}/../client/build/index.html`);
 });

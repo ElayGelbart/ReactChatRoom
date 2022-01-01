@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { io } from "socket.io-client";
 //Style
 import "./chatroom.css";
 // My Components
@@ -15,37 +15,24 @@ export const UsernameContext = React.createContext({ username: "" });
 
 export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
-  const [UserInfo, setUserInfo] = useState({ username: "" });
+  const [UserInfo, setUserInfo] = useState<{ username: string }>({
+    username: "",
+  });
   const dispatch = useDispatch();
 
   async function setSSE() {
+    const socket = io();
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+    socket.emit("userConnect", { username: UserInfo.username });
+    socket.on("msgsUsersData", (data) => {
+      console.log(JSON.parse(data));
+      dispatch(setSSEaction(JSON.parse(data)));
+    });
     const JWToken = document.cookie.split("=")[1];
     console.log(JWToken, "the token");
-
-    fetchEventSource(`/chat/stream`, {
-      headers: {
-        authorization: `Bearer ${JWToken}`,
-        Accept: "text/event-stream",
-      },
-      async onopen(response) {
-        if (response.ok) {
-          return;
-        }
-        throw response;
-      },
-      onmessage(e) {
-        console.log(e, "e msg");
-        const dataFromServer: State.SSE = JSON.parse(e.data);
-        dispatch(setSSEaction(dataFromServer));
-      },
-      onerror(err) {
-        console.log("in error");
-        throw err;
-      },
-      onclose() {
-        console.log("in close");
-      },
-    });
   }
 
   useEffect(() => {
