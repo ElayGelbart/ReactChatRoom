@@ -10,7 +10,7 @@ declare namespace State {
     classOfCreator: string;
     seenIndicator?: boolean;
   }
-  type UserData = string;
+  type UserData = { username: string };
 
   interface SSE {
     msgs: MsgData[];

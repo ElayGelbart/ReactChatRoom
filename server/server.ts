@@ -20,7 +20,7 @@ mongoClient
     console.log("mongodb connected");
   })
   .catch((err) => {
-    console.log(`${err} happend`);
+    console.log(`${err} happened`);
   });
 
 const server = express();

@@ -4,6 +4,7 @@ import {
   getMsgUsersJSON,
   userConnectedEvent,
   addMsgEvent,
+  getMsgsUsersEvent,
 } from "./events/MsgEvent";
 const port = process.env.PORT || 8080;
 
@@ -14,7 +15,7 @@ export const io = new Server(httpServer);
 io.on("connection", async (socket) => {
   console.log("someone connected");
   socket.on("userConnect", userConnectedEvent);
-  const MsgUsersObj = await getMsgUsersJSON();
-  socket.emit("msgsUsersData", MsgUsersObj);
+  socket.on("getMsgsUsers", getMsgsUsersEvent);
   socket.on("addNewMsg", addMsgEvent);
+  socket.emit("msgsUsersData", await getMsgUsersJSON());
 });

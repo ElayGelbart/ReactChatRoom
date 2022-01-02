@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { setSSEaction } from "../../redux/slices/dataSlices";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
+export const socket = io();
 
 export default function ChatPage(): JSX.Element {
   const [IsAuth, setIsAuth] = useState(false);
@@ -21,8 +22,6 @@ export default function ChatPage(): JSX.Element {
   const dispatch = useDispatch();
 
   async function setSSE() {
-    const socket = io();
-
     socket.on("connect", () => {
       console.log("connected");
     });

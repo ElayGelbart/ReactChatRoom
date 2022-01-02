@@ -1,4 +1,5 @@
 import { useRef, useContext } from "react";
+import { socket } from "./ChatPage";
 import SendIcon from "@mui/icons-material/Send";
 import { UsernameContext } from "./ChatPage";
 import { useDispatch } from "react-redux";
@@ -27,18 +28,10 @@ export default function SendChatContainer() {
           seenIndicator: true,
         })
       );
-
-      await fetch("/chat/new/msg", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `Bearer ${JWToken}`,
-        },
-        body: JSON.stringify({
-          msgText: UserMsgInputValue,
-          msgAuthor: username,
-        }),
-      });
+      socket.emit(
+        "addNewMsg",
+        JSON.stringify({ msgAuthor: username, msgText: UserMsgInputValue })
+      );
 
       UserMsgInput.current.value = "";
     } catch (err) {
@@ -58,7 +51,7 @@ export default function SendChatContainer() {
           ref={UserMsgInput}
           id="inputSendChat"
           type="text"
-          placeholder="Messeage"
+          placeholder="Message"
           onKeyDown={(e) => {
             EnterKeySendMsg(e);
           }}

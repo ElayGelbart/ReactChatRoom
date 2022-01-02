@@ -15,10 +15,10 @@ export default function UsersLoggedContainer() {
   useEffect(() => {
     const UsersArrayJSX: JSX.Element[] = [];
     for (let user of UsersState) {
-      if (user === username) {
+      if (user.username === username) {
         continue;
       }
-      UsersArrayJSX.push(<UsernameLogged username={user} />);
+      UsersArrayJSX.push(<UsernameLogged username={user.username} />);
     }
     setUserLoggedList(UsersArrayJSX);
     // eslint-disable-next-line react-hooks/exhaustive-deps
