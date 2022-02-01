@@ -18,6 +18,7 @@ export const getMsgsUsersEvent = async () => {
   const userData = JSON.parse(await getMsgUsersJSON());
 };
 export const userConnectedEvent = async (userObj: { username: string }) => {
+  console.log(userObj);
   UsersCollection.updateOne(
     { username: userObj.username },
     { $set: { connected: true } }

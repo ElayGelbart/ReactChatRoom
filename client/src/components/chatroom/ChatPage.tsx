@@ -10,6 +10,7 @@ import LoadingSVG from "../svg/LoadingSVG";
 // Redux
 import { useDispatch } from "react-redux";
 import { setSSEaction } from "../../redux/slices/dataSlices";
+import { userInfo } from "os";
 // Context
 export const UsernameContext = React.createContext({ username: "" });
 export const socket = io();
@@ -20,20 +21,22 @@ export default function ChatPage(): JSX.Element {
     username: "",
   });
   const dispatch = useDispatch();
-
-  async function setSSE(): Promise<void> {
-    socket.on("connect", () => {
-      console.log("connected");
-    });
-    socket.on("msgsUsersData", (data) => {
-      console.log(JSON.parse(data));
-      dispatch(setSSEaction(JSON.parse(data)));
-    });
-    socket.emit("userConnect", { username: UserInfo.username });
-    const JWToken = document.cookie.split("=")[1];
-    console.log(JWToken, "the token");
-  }
-
+  useEffect(() => {
+    async function setSSE(): Promise<void> {
+      socket.on("connect", () => {
+        console.log("connected");
+      });
+      socket.on("msgsUsersData", (data) => {
+        console.log(JSON.parse(data));
+        dispatch(setSSEaction(JSON.parse(data)));
+      });
+      console.log("userInfo", userInfo);
+      socket.emit("userConnect", { username: UserInfo.username });
+      const JWToken = document.cookie.split("=")[1];
+      console.log(JWToken, "the token");
+    }
+    setSSE();
+  }, [UserInfo]);
   useEffect(() => {
     async function CheckAuth() {
       try {
@@ -51,8 +54,8 @@ export default function ChatPage(): JSX.Element {
           return res;
         });
         const cookieUsernameObj = await response.json();
+        console.log("cookieUsernameObj", cookieUsernameObj);
         setUserInfo(cookieUsernameObj);
-        setSSE();
         setIsAuth(true);
       } catch (err) {
         setIsAuth(false);
