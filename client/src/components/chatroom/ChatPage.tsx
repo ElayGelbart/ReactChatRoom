@@ -21,15 +21,15 @@ export default function ChatPage(): JSX.Element {
   });
   const dispatch = useDispatch();
 
-  async function setSSE() {
+  async function setSSE(): Promise<void> {
     socket.on("connect", () => {
       console.log("connected");
     });
-    socket.emit("userConnect", { username: UserInfo.username });
     socket.on("msgsUsersData", (data) => {
       console.log(JSON.parse(data));
       dispatch(setSSEaction(JSON.parse(data)));
     });
+    socket.emit("userConnect", { username: UserInfo.username });
     const JWToken = document.cookie.split("=")[1];
     console.log(JWToken, "the token");
   }
